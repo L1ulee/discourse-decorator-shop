@@ -20,19 +20,24 @@ class CreateGamifiedShopTables < ActiveRecord::Migration[7.0]
       t.integer :created_by_id
       t.datetime :created_at, null: false
     end
-    add_index :gamified_shop_point_ledger_entries, %i[user_id entry_type created_at],
+    add_index :gamified_shop_point_ledger_entries,
+              %i[user_id entry_type created_at],
               name: "idx_gamified_shop_ledger_user_type_date"
-    add_index :gamified_shop_point_ledger_entries, %i[reference_type reference_id],
+    add_index :gamified_shop_point_ledger_entries,
+              %i[reference_type reference_id],
               name: "idx_gamified_shop_ledger_reference"
     # At most one reversal per original ledger entry (PRD 6.2, ADR-0003).
-    add_index :gamified_shop_point_ledger_entries, :reference_id,
+    add_index :gamified_shop_point_ledger_entries,
+              :reference_id,
               unique: true,
               where: "entry_type = 'event_reversal'",
               name: "idx_gamified_shop_ledger_unique_reversal"
     # At most one restore per reversal entry (post undelete).
-    add_index :gamified_shop_point_ledger_entries, :reference_id,
+    add_index :gamified_shop_point_ledger_entries,
+              :reference_id,
               unique: true,
-              where: "entry_type = 'event_reward' AND reference_type = 'GamifiedShop::PointLedgerEntry'",
+              where:
+                "entry_type = 'event_reward' AND reference_type = 'GamifiedShop::PointLedgerEntry'",
               name: "idx_gamified_shop_ledger_unique_restore"
 
     create_table :gamified_shop_decoration_assets do |t|
@@ -71,7 +76,8 @@ class CreateGamifiedShopTables < ActiveRecord::Migration[7.0]
       t.jsonb :metadata, null: false, default: {}
       t.timestamps
     end
-    add_index :gamified_shop_orders, %i[user_id shop_item_id status],
+    add_index :gamified_shop_orders,
+              %i[user_id shop_item_id status],
               name: "idx_gamified_shop_orders_user_item_status"
     add_index :gamified_shop_orders, :created_at
 
@@ -89,9 +95,11 @@ class CreateGamifiedShopTables < ActiveRecord::Migration[7.0]
 
     # FK RESTRICT: an asset that is bound to an item or owned by a user can
     # never be deleted (PRD 6.4). Postgres default ON DELETE is NO ACTION.
-    add_foreign_key :gamified_shop_items, :gamified_shop_decoration_assets,
+    add_foreign_key :gamified_shop_items,
+                    :gamified_shop_decoration_assets,
                     column: :decoration_asset_id
-    add_foreign_key :gamified_shop_user_decorations, :gamified_shop_decoration_assets,
+    add_foreign_key :gamified_shop_user_decorations,
+                    :gamified_shop_decoration_assets,
                     column: :decoration_asset_id
     add_foreign_key :gamified_shop_orders, :gamified_shop_items, column: :shop_item_id
   end

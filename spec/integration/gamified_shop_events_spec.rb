@@ -8,12 +8,12 @@ require "rails_helper"
 describe "GamifiedShop event wiring" do
   fab!(:user)
   fab!(:other_user, :user)
+  # Topics are created in an explicit category: relying on Uncategorized fails
+  # in the test DB with Discourse::InvalidAccess ("can_create? failed").
+  fab!(:category)
 
   before do
     SiteSetting.gamified_shop_enabled = true
-    # PostCreator without a category targets Uncategorized, which is disallowed
-    # by default and would raise Discourse::InvalidAccess ("can_create? failed").
-    SiteSetting.allow_uncategorized_topics = true
     SiteSetting.gamified_shop_topic_created_points = 5
     SiteSetting.gamified_shop_reply_created_points = 2
     SiteSetting.gamified_shop_like_received_points = 1
@@ -30,6 +30,7 @@ describe "GamifiedShop event wiring" do
         user,
         title: "A perfectly valid shop wiring topic",
         raw: "This is a long enough body for the topic under test.",
+        category: category.id,
       )
     expect(balance_of(user)).to eq(5)
 
@@ -57,6 +58,7 @@ describe "GamifiedShop event wiring" do
         user,
         title: "Another perfectly valid shop wiring topic",
         raw: "This is a long enough body for the second topic.",
+        category: category.id,
       )
     PostCreator.create!(
       other_user,
