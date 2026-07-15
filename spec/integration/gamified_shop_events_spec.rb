@@ -8,10 +8,6 @@ require "rails_helper"
 describe "GamifiedShop event wiring" do
   fab!(:user)
   fab!(:other_user, :user)
-  # This test exercises the earning events, not permissions. A fabricated user
-  # cannot clear the topic-creation guardian in the test DB (Discourse::
-  # InvalidAccess "can_create? failed"), so PostCreator is called with
-  # skip_guardian: true; the explicit category keeps the topic save valid.
   fab!(:category)
 
   before do
@@ -26,24 +22,37 @@ describe "GamifiedShop event wiring" do
     GamifiedShop::PointAccount.balance_for(u.id)
   end
 
+  # This spec verifies event wiring, not permissions, and a fabricated user
+  # cannot clear the creation guardian in CI's Discourse (Discourse::
+  # InvalidAccess "can_create? failed"). skip_validations bypasses the topic
+  # guardian (TopicCreator#setup_topic_params) and skip_guardian bypasses the
+  # reply guardian (PostCreator#valid?); both still fire the create events.
+  def create_topic!(as:, title:)
+    PostCreator.create!(
+      as,
+      title: title,
+      raw: "This is a long enough body for the topic under test.",
+      category: category.id,
+      skip_validations: true,
+      skip_guardian: true,
+    )
+  end
+
+  def create_reply!(as:, topic_id:)
+    PostCreator.create!(
+      as,
+      topic_id: topic_id,
+      raw: "This is a long enough reply body for the test.",
+      skip_validations: true,
+      skip_guardian: true,
+    )
+  end
+
   it "awards and claws back through the real Discourse events" do
-    op =
-      PostCreator.create!(
-        user,
-        title: "A perfectly valid shop wiring topic",
-        raw: "This is a long enough body for the topic under test.",
-        category: category.id,
-        skip_guardian: true,
-      )
+    op = create_topic!(as: user, title: "A perfectly valid shop wiring topic")
     expect(balance_of(user)).to eq(5)
 
-    reply =
-      PostCreator.create!(
-        other_user,
-        topic_id: op.topic_id,
-        raw: "This is a long enough reply body for the test.",
-        skip_guardian: true,
-      )
+    reply = create_reply!(as: other_user, topic_id: op.topic_id)
     expect(balance_of(other_user)).to eq(2)
 
     PostActionCreator.like(user, reply)
@@ -57,20 +66,8 @@ describe "GamifiedShop event wiring" do
   end
 
   it "claws back the whole topic's rewards when the topic is deleted" do
-    op =
-      PostCreator.create!(
-        user,
-        title: "Another perfectly valid shop wiring topic",
-        raw: "This is a long enough body for the second topic.",
-        category: category.id,
-        skip_guardian: true,
-      )
-    PostCreator.create!(
-      other_user,
-      topic_id: op.topic_id,
-      raw: "This is a long enough reply body for the cascade test.",
-      skip_guardian: true,
-    )
+    op = create_topic!(as: user, title: "Another perfectly valid shop wiring topic")
+    create_reply!(as: other_user, topic_id: op.topic_id)
     expect(balance_of(user)).to eq(5)
     expect(balance_of(other_user)).to eq(2)
 
