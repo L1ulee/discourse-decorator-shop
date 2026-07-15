@@ -1,0 +1,133 @@
+<div class="gamified-shop-admin-assets">
+  <div class="gamified-shop-admin__controls">
+    <DButton
+      class="btn-primary gamified-shop-admin-assets__new"
+      @icon="plus"
+      @label="gamified_shop.admin.assets.new"
+      @action={{this.newAsset}}
+    />
+  </div>
+
+  {{#if this.showForm}}
+    <div class="gamified-shop-admin-form gamified-shop-admin-assets__form">
+      <div class="gamified-shop-admin-form__row">
+        <label>{{i18n "gamified_shop.admin.assets.name"}}</label>
+        <TextField @value={{this.formName}} />
+      </div>
+
+      <div class="gamified-shop-admin-form__row">
+        <label>{{i18n "gamified_shop.admin.assets.slot"}}</label>
+        <ComboBox
+          @content={{this.slotOptions}}
+          @value={{this.formSlot}}
+          @onChange={{this.updateFormSlot}}
+        />
+      </div>
+
+      {{#if this.formIsImageSlot}}
+        <div class="gamified-shop-admin-form__row">
+          <label>{{i18n "gamified_shop.admin.assets.image"}}</label>
+          <UppyImageUploader
+            @id="gamified-shop-asset-uploader"
+            @type="gamified_shop_decoration"
+            @imageUrl={{this.formImageUrl}}
+            @onUploadDone={{this.uploadDone}}
+            @onUploadDeleted={{this.uploadDeleted}}
+          />
+        </div>
+      {{/if}}
+
+      {{#if this.formIsUsernameStyle}}
+        <div class="gamified-shop-admin-form__row">
+          <label>{{i18n "gamified_shop.admin.assets.style_preset"}}</label>
+          <ComboBox
+            @content={{this.presetOptions}}
+            @value={{this.formPreset}}
+            @onChange={{this.updateFormPreset}}
+          />
+        </div>
+
+        {{#if this.showColorParam}}
+          <div class="gamified-shop-admin-form__row">
+            <label>{{i18n "gamified_shop.admin.assets.style_params"}}</label>
+            <Input @type="color" @value={{this.formParamColor}} />
+          </div>
+        {{/if}}
+
+        {{#if this.showGradientParams}}
+          <div class="gamified-shop-admin-form__row">
+            <label>{{i18n "gamified_shop.admin.assets.style_params"}}</label>
+            <Input @type="color" @value={{this.formParamFrom}} />
+            <Input @type="color" @value={{this.formParamTo}} />
+          </div>
+        {{/if}}
+
+        {{#if this.currentUser.admin}}
+          <div class="gamified-shop-admin-form__row">
+            <label>{{i18n "gamified_shop.admin.assets.custom_css"}}</label>
+            <Textarea
+              class="gamified-shop-admin-assets__custom-css"
+              @value={{this.formCustomCss}}
+            />
+          </div>
+        {{/if}}
+      {{/if}}
+
+      <div class="gamified-shop-admin-form__actions">
+        <DButton
+          class="btn-primary"
+          @label="gamified_shop.admin.items.save"
+          @action={{this.save}}
+          @disabled={{this.saving}}
+        />
+        <DButton
+          @label="gamified_shop.admin.items.cancel"
+          @action={{this.cancel}}
+        />
+      </div>
+    </div>
+  {{/if}}
+
+  <table class="gamified-shop-admin-table gamified-shop-admin-assets__table">
+    <thead>
+      <tr>
+        <th>{{i18n "gamified_shop.admin.assets.name"}}</th>
+        <th>{{i18n "gamified_shop.admin.assets.slot"}}</th>
+        <th>{{i18n "gamified_shop.admin.assets.image"}}</th>
+        <th>{{i18n "gamified_shop.admin.assets.style_preset"}}</th>
+        <th>{{i18n "gamified_shop.admin.assets.in_use"}}</th>
+        <th>{{i18n "gamified_shop.admin.actions"}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each this.rows key="asset.id" as |row|}}
+        <tr class="gamified-shop-admin-assets__row">
+          <td>{{row.asset.name}}</td>
+          <td>{{row.slotLabel}}</td>
+          <td>
+            {{#if row.asset.image_url}}
+              <img
+                class="gamified-shop-admin-assets__preview"
+                src={{row.asset.image_url}}
+                alt={{i18n "gamified_shop.admin.assets.preview"}}
+                width="40"
+                height="40"
+              />
+            {{/if}}
+          </td>
+          <td>{{row.asset.style_preset}}</td>
+          <td>{{row.inUseLabel}}</td>
+          <td>
+            <DButton
+              class="btn-danger"
+              @icon="trash-can"
+              @label="gamified_shop.admin.assets.delete"
+              @action={{fn this.deleteAsset row.asset}}
+              @disabled={{row.deleteDisabled}}
+            />
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
