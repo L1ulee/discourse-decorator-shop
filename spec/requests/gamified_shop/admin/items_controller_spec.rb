@@ -6,7 +6,7 @@ RSpec.describe GamifiedShop::Admin::ItemsController do
   fab!(:admin)
   fab!(:moderator)
   fab!(:user)
-  fab!(:asset) { Fabricate(:gamified_shop_decoration_asset) }
+  fab!(:asset, :gamified_shop_decoration_asset)
 
   before { SiteSetting.gamified_shop_enabled = true }
 

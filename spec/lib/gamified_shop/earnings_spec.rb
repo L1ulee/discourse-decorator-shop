@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe GamifiedShop::Earnings do
   fab!(:user)
-  fab!(:liker) { Fabricate(:user) }
+  fab!(:liker, :user)
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:first_post) { Fabricate(:post, topic: topic, user: user) }
   fab!(:reply) { Fabricate(:post, topic: topic, user: user) }
@@ -251,9 +251,7 @@ RSpec.describe GamifiedShop::Earnings do
       expect(balance).to eq(10)
 
       another_reply = Fabricate(:post, topic: topic, user: user)
-      expect { described_class.reply_created(another_reply, user) }.not_to change {
-        entries.count
-      }
+      expect { described_class.reply_created(another_reply, user) }.not_to change { entries.count }
       expect(balance).to eq(10)
     end
 
@@ -280,7 +278,7 @@ RSpec.describe GamifiedShop::Earnings do
   end
 
   describe ".post_destroyed / .post_recovered" do
-    fab!(:liker2) { Fabricate(:user) }
+    fab!(:liker2, :user)
 
     before do
       described_class.reply_created(reply, user) # +2

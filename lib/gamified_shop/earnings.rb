@@ -107,8 +107,7 @@ module GamifiedShop
       end
 
       def like?(post_action)
-        post_action.present? &&
-          post_action.post_action_type_id == PostActionType.types[:like]
+        post_action.present? && post_action.post_action_type_id == PostActionType.types[:like]
       end
 
       def eligible_user?(user)
@@ -188,11 +187,14 @@ module GamifiedShop
         rewards = reward_entries_for(trigger)
         return if rewards.empty?
         reversed_ids =
-          PointLedgerEntry.where(
-            entry_type: PointLedgerEntry::EVENT_REVERSAL,
-            reference_type: LEDGER_REF,
-            reference_id: rewards.map(&:id),
-          ).pluck(:reference_id).to_set
+          PointLedgerEntry
+            .where(
+              entry_type: PointLedgerEntry::EVENT_REVERSAL,
+              reference_type: LEDGER_REF,
+              reference_id: rewards.map(&:id),
+            )
+            .pluck(:reference_id)
+            .to_set
 
         rewards.each do |entry|
           next if reversed_ids.include?(entry.id)
@@ -230,11 +232,14 @@ module GamifiedShop
           ).to_a
         return if reversals.empty?
         restored_ids =
-          PointLedgerEntry.where(
-            entry_type: PointLedgerEntry::EVENT_REWARD,
-            reference_type: LEDGER_REF,
-            reference_id: reversals.map(&:id),
-          ).pluck(:reference_id).to_set
+          PointLedgerEntry
+            .where(
+              entry_type: PointLedgerEntry::EVENT_REWARD,
+              reference_type: LEDGER_REF,
+              reference_id: reversals.map(&:id),
+            )
+            .pluck(:reference_id)
+            .to_set
 
         reversals.each do |reversal|
           next if restored_ids.include?(reversal.id)

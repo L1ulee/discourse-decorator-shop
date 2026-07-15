@@ -139,8 +139,7 @@ RSpec.describe GamifiedShop::MeController do
 
       get "/gamified-shop/me/decorations.json"
 
-      equipped_by_id =
-        response.parsed_body["decorations"].to_h { |d| [d["id"], d["equipped"]] }
+      equipped_by_id = response.parsed_body["decorations"].to_h { |d| [d["id"], d["equipped"]] }
       expect(equipped_by_id[decoration.id]).to eq(true)
       expect(equipped_by_id[other.id]).to eq(false)
     end

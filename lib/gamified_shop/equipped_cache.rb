@@ -9,15 +9,17 @@ module GamifiedShop
     EXPIRY = 10.minutes
 
     def self.for_user(user_id)
-      Discourse.cache.fetch(cache_key(user_id), expires_in: EXPIRY) do
-        rows =
-          UserDecoration
-            .displayable
-            .where(user_id: user_id)
-            .joins(:decoration_asset)
-            .pluck("gamified_shop_decoration_assets.slot", :decoration_asset_id)
-        rows.to_h
-      end
+      Discourse
+        .cache
+        .fetch(cache_key(user_id), expires_in: EXPIRY) do
+          rows =
+            UserDecoration
+              .displayable
+              .where(user_id: user_id)
+              .joins(:decoration_asset)
+              .pluck("gamified_shop_decoration_assets.slot", :decoration_asset_id)
+          rows.to_h
+        end
     end
 
     def self.invalidate(user_id)

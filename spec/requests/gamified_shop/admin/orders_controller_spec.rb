@@ -6,8 +6,8 @@ RSpec.describe GamifiedShop::Admin::OrdersController do
   fab!(:admin)
   fab!(:moderator)
   fab!(:user)
-  fab!(:buyer) { Fabricate(:user) }
-  fab!(:asset) { Fabricate(:gamified_shop_decoration_asset) }
+  fab!(:buyer, :user)
+  fab!(:asset, :gamified_shop_decoration_asset)
   fab!(:item) { Fabricate(:gamified_shop_item, decoration_asset: asset, price: 10, stock: 2) }
 
   before { SiteSetting.gamified_shop_enabled = true }
@@ -56,7 +56,7 @@ RSpec.describe GamifiedShop::Admin::OrdersController do
           refunded_at: 1.day.ago,
         )
       end
-      fab!(:other_order) { Fabricate(:gamified_shop_order) }
+      fab!(:other_order, :gamified_shop_order)
 
       it "lists orders newest first" do
         get "/admin/plugins/gamified-shop/orders.json"

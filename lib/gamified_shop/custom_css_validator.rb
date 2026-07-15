@@ -41,9 +41,7 @@ module GamifiedShop
       errors << error(:forbidden_functions) if css.match?(FORBIDDEN_FUNCTIONS)
       errors << error(:external_url) if css.match?(FORBIDDEN_SEQUENCES)
       errors << error(:comments_not_allowed) if css.include?("/*") || css.include?("*/")
-      if css.count('"').odd? || css.count("'").odd?
-        errors << error(:unbalanced_quotes)
-      end
+      errors << error(:unbalanced_quotes) if css.count('"').odd? || css.count("'").odd?
 
       url_opens = css.scan(URL_OPEN).size
       url_calls = css.scan(URL_CALL)
@@ -53,13 +51,15 @@ module GamifiedShop
         errors << error(:external_url)
       end
 
-      css.split(";").each do |declaration|
-        next if declaration.strip.empty?
-        unless declaration.match?(DECLARATION)
-          errors << error(:invalid_declaration)
-          break
+      css
+        .split(";")
+        .each do |declaration|
+          next if declaration.strip.empty?
+          unless declaration.match?(DECLARATION)
+            errors << error(:invalid_declaration)
+            break
+          end
         end
-      end
 
       errors.uniq
     end

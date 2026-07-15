@@ -15,8 +15,7 @@ module GamifiedShop
 
     # States are derived facts, never stored (PRD 6.5):
     # displayable <=> equipped AND not expired.
-    scope :not_expired,
-          -> { where("expires_at IS NULL OR expires_at > ?", Time.zone.now) }
+    scope :not_expired, -> { where("expires_at IS NULL OR expires_at > ?", Time.zone.now) }
     scope :displayable, -> { where(equipped: true).not_expired }
 
     after_commit { GamifiedShop::EquippedCache.invalidate(user_id) }

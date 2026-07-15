@@ -25,17 +25,17 @@ module GamifiedShop
     end
 
     def self.current
-      Discourse.cache.fetch(CACHE_KEY) do
-        compiled = compile
-        { "css" => compiled, "digest" => Digest::SHA1.hexdigest(compiled) }
-      end
+      Discourse
+        .cache
+        .fetch(CACHE_KEY) do
+          compiled = compile
+          { "css" => compiled, "digest" => Digest::SHA1.hexdigest(compiled) }
+        end
     end
 
     def self.compile
       css = +"/* Gamified Decoration Shop - generated, do not edit */\n"
-      DecorationAsset.includes(:upload).order(:id).each do |asset|
-        css << rules_for(asset)
-      end
+      DecorationAsset.includes(:upload).order(:id).each { |asset| css << rules_for(asset) }
       css
     end
 

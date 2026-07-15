@@ -101,9 +101,7 @@ RSpec.describe GamifiedShop::StoreController do
       get "/gamified-shop/store.json"
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["owned_asset_ids"]).to contain_exactly(
-        owned.decoration_asset_id,
-      )
+      expect(response.parsed_body["owned_asset_ids"]).to contain_exactly(owned.decoration_asset_id)
     end
   end
 end

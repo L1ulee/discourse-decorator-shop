@@ -50,9 +50,9 @@ RSpec.describe GamifiedShop::Admin::AssetsController do
     end
 
     it "can create an asset from a preset" do
-      expect { post "/admin/plugins/gamified-shop/assets.json", params: valid_preset_params }.to change {
-        GamifiedShop::DecorationAsset.count
-      }.by(1)
+      expect {
+        post "/admin/plugins/gamified-shop/assets.json", params: valid_preset_params
+      }.to change { GamifiedShop::DecorationAsset.count }.by(1)
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["asset"]["style_preset"]).to eq("username_solid")
@@ -88,9 +88,9 @@ RSpec.describe GamifiedShop::Admin::AssetsController do
 
     describe "#create" do
       it "creates a username style asset from a valid preset" do
-        expect { post "/admin/plugins/gamified-shop/assets.json", params: valid_preset_params }.to change {
-          GamifiedShop::DecorationAsset.count
-        }.by(1)
+        expect {
+          post "/admin/plugins/gamified-shop/assets.json", params: valid_preset_params
+        }.to change { GamifiedShop::DecorationAsset.count }.by(1)
 
         expect(response.status).to eq(200)
         asset = response.parsed_body["asset"]
@@ -137,7 +137,7 @@ RSpec.describe GamifiedShop::Admin::AssetsController do
     end
 
     describe "#destroy" do
-      fab!(:asset) { Fabricate(:gamified_shop_decoration_asset) }
+      fab!(:asset, :gamified_shop_decoration_asset)
 
       it "destroys an unused asset" do
         delete "/admin/plugins/gamified-shop/assets/#{asset.id}.json"

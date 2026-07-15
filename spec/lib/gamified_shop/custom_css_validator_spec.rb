@@ -51,9 +51,7 @@ RSpec.describe GamifiedShop::CustomCssValidator do
       end
 
       it "rejects braces" do
-        expect(described_class.errors_for("color: red; }")).to include(
-          error(:forbidden_characters),
-        )
+        expect(described_class.errors_for("color: red; }")).to include(error(:forbidden_characters))
         expect(described_class.valid?(".evil { color: red; }")).to eq(false)
       end
 
@@ -85,9 +83,7 @@ RSpec.describe GamifiedShop::CustomCssValidator do
       end
 
       it "rejects unbalanced quotes" do
-        expect(described_class.errors_for("font-family: 'Comic")).to eq(
-          [error(:unbalanced_quotes)],
-        )
+        expect(described_class.errors_for("font-family: 'Comic")).to eq([error(:unbalanced_quotes)])
         expect(described_class.errors_for('content: "a;')).to include(error(:unbalanced_quotes))
       end
 
@@ -117,9 +113,7 @@ RSpec.describe GamifiedShop::CustomCssValidator do
       end
 
       it "rejects bare text without a property/value colon" do
-        expect(described_class.errors_for("this is not css")).to eq(
-          [error(:invalid_declaration)],
-        )
+        expect(described_class.errors_for("this is not css")).to eq([error(:invalid_declaration)])
       end
     end
   end

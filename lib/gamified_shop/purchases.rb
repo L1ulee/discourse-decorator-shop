@@ -17,8 +17,7 @@ module GamifiedShop
         raise ShopError.new(:insufficient_balance) if account.balance < item.price
 
         if item.purchase_limit_per_user.present?
-          fulfilled_count =
-            ShopOrder.fulfilled.where(user_id: user.id, shop_item_id: item.id).count
+          fulfilled_count = ShopOrder.fulfilled.where(user_id: user.id, shop_item_id: item.id).count
           if fulfilled_count >= item.purchase_limit_per_user
             raise ShopError.new(:purchase_limit_reached)
           end

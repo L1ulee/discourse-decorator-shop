@@ -11,9 +11,7 @@ module GamifiedShop
       def create
         # Custom CSS is admin-only (ADR-0002): moderators cannot author
         # styles Discourse would never let them ship through themes.
-        if params[:custom_css].present? && !current_user.admin?
-          raise Discourse::InvalidAccess.new
-        end
+        raise Discourse::InvalidAccess.new if params[:custom_css].present? && !current_user.admin?
 
         asset = DecorationAsset.new(asset_params)
         if asset.save
@@ -23,7 +21,9 @@ module GamifiedShop
             asset_name: asset.name,
             slot: asset.slot,
           )
-          render_json_dump(asset: serialize_data(asset, AdminDecorationAssetSerializer))
+          render_json_dump(
+            asset: serialize_data(asset, AdminDecorationAssetSerializer, root: false),
+          )
         else
           render_json_error(asset)
         end
@@ -54,9 +54,7 @@ module GamifiedShop
       def asset_params
         permitted = params.permit(:name, :slot, :upload_id, :style_preset, :custom_css)
         style_params = params[:style_params]
-        if style_params.present?
-          permitted[:style_params] = style_params.permit!.to_h
-        end
+        permitted[:style_params] = style_params.permit!.to_h if style_params.present?
         permitted
       end
     end

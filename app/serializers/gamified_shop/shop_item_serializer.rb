@@ -11,8 +11,6 @@ module GamifiedShop
                :purchase_limit_per_user,
                :listed
 
-    has_one :decoration_asset,
-            serializer: DecorationAssetSerializer,
-            embed: :objects
+    has_one :decoration_asset, serializer: DecorationAssetSerializer, embed: :objects
   end
 end

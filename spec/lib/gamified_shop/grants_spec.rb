@@ -6,7 +6,7 @@ RSpec.describe GamifiedShop::Grants do
   fab!(:admin)
   fab!(:moderator)
   fab!(:user)
-  fab!(:asset) { Fabricate(:gamified_shop_decoration_asset) }
+  fab!(:asset, :gamified_shop_decoration_asset)
 
   before { SiteSetting.gamified_shop_enabled = true }
 
@@ -157,7 +157,10 @@ RSpec.describe GamifiedShop::Grants do
       described_class.revoke_decoration!(user_decoration_id: decoration.id, acting_user: admin)
 
       expect(
-        UserHistory.where(acting_user_id: admin.id, custom_type: "gamified_shop_adjust_points").count,
+        UserHistory.where(
+          acting_user_id: admin.id,
+          custom_type: "gamified_shop_adjust_points",
+        ).count,
       ).to eq(2)
       expect(
         UserHistory.where(

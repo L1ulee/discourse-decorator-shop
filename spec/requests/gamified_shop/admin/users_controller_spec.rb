@@ -6,8 +6,8 @@ RSpec.describe GamifiedShop::Admin::UsersController do
   fab!(:admin)
   fab!(:moderator)
   fab!(:user)
-  fab!(:target) { Fabricate(:user) }
-  fab!(:asset) { Fabricate(:gamified_shop_decoration_asset) }
+  fab!(:target, :user)
+  fab!(:asset, :gamified_shop_decoration_asset)
 
   before { SiteSetting.gamified_shop_enabled = true }
 
@@ -144,7 +144,8 @@ RSpec.describe GamifiedShop::Admin::UsersController do
           entry_type: "admin_grant",
           created_by_id: admin.id,
         )
-        decoration = Fabricate(:gamified_shop_user_decoration, user: target, decoration_asset: asset)
+        decoration =
+          Fabricate(:gamified_shop_user_decoration, user: target, decoration_asset: asset)
 
         get "#{base_path}.json"
 

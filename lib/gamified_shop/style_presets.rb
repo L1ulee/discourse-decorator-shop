@@ -9,10 +9,18 @@ module GamifiedShop
 
     # preset key => { param name => :color }
     PRESETS = {
-      "username_solid" => { "color" => :color },
-      "username_gradient" => { "from" => :color, "to" => :color },
-      "username_glow" => { "color" => :color },
-      "username_rainbow" => {},
+      "username_solid" => {
+        "color" => :color,
+      },
+      "username_gradient" => {
+        "from" => :color,
+        "to" => :color,
+      },
+      "username_glow" => {
+        "color" => :color,
+      },
+      "username_rainbow" => {
+      },
     }.freeze
 
     def self.keys
@@ -28,14 +36,10 @@ module GamifiedShop
       return [error(:invalid_params)] unless params.is_a?(Hash)
 
       errors = []
-      params.each_key do |key|
-        errors << error(:unknown_param) unless schema.key?(key.to_s)
-      end
+      params.each_key { |key| errors << error(:unknown_param) unless schema.key?(key.to_s) }
       schema.each_key do |key|
         value = params[key.to_s] || params[key.to_sym]
-        unless value.is_a?(String) && value.match?(COLOR)
-          errors << error(:invalid_color)
-        end
+        errors << error(:invalid_color) unless value.is_a?(String) && value.match?(COLOR)
       end
       errors.uniq
     end

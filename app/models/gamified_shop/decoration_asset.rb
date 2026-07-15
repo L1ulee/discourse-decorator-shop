@@ -11,9 +11,7 @@ module GamifiedShop
     IMAGE_SLOTS = [AVATAR_FRAME, USER_CARD_BACKGROUND].freeze
 
     belongs_to :upload, optional: true
-    has_many :shop_items,
-             class_name: "GamifiedShop::ShopItem",
-             foreign_key: :decoration_asset_id
+    has_many :shop_items, class_name: "GamifiedShop::ShopItem", foreign_key: :decoration_asset_id
     has_many :user_decorations,
              class_name: "GamifiedShop::UserDecoration",
              foreign_key: :decoration_asset_id

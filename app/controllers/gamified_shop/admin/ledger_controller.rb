@@ -12,9 +12,7 @@ module GamifiedShop
           user = User.find_by_username(params[:username])
           entries = entries.where(user_id: user&.id || -1)
         end
-        if params[:entry_type].present?
-          entries = entries.where(entry_type: params[:entry_type])
-        end
+        entries = entries.where(entry_type: params[:entry_type]) if params[:entry_type].present?
         if params[:item_id].present?
           entries =
             entries.where(

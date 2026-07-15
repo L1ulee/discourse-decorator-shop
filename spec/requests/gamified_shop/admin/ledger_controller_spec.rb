@@ -6,8 +6,8 @@ RSpec.describe GamifiedShop::Admin::LedgerController do
   fab!(:admin)
   fab!(:moderator)
   fab!(:user)
-  fab!(:alice) { Fabricate(:user) }
-  fab!(:bob) { Fabricate(:user) }
+  fab!(:alice, :user)
+  fab!(:bob, :user)
 
   before { SiteSetting.gamified_shop_enabled = true }
 

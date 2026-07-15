@@ -4,10 +4,10 @@ require "rails_helper"
 
 RSpec.describe GamifiedShop::Equipping do
   fab!(:user)
-  fab!(:other_user) { Fabricate(:user) }
-  fab!(:username_asset) { Fabricate(:gamified_shop_decoration_asset) }
-  fab!(:other_username_asset) { Fabricate(:gamified_shop_decoration_asset) }
-  fab!(:frame_asset) { Fabricate(:gamified_shop_avatar_frame_asset) }
+  fab!(:other_user, :user)
+  fab!(:username_asset, :gamified_shop_decoration_asset)
+  fab!(:other_username_asset, :gamified_shop_decoration_asset)
+  fab!(:frame_asset, :gamified_shop_avatar_frame_asset)
 
   before { SiteSetting.gamified_shop_enabled = true }
 

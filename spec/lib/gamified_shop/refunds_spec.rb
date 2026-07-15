@@ -34,13 +34,13 @@ RSpec.describe GamifiedShop::Refunds do
   end
 
   describe ".refund!" do
-    context "permissions" do
+    context "when checking permissions" do
       it "raises Discourse::InvalidAccess for moderators" do
         order = place_order(user)
 
-        expect { described_class.refund!(order_id: order.id, refunded_by: moderator) }.to raise_error(
-          Discourse::InvalidAccess,
-        )
+        expect {
+          described_class.refund!(order_id: order.id, refunded_by: moderator)
+        }.to raise_error(Discourse::InvalidAccess)
         expect(order.reload.status).to eq(GamifiedShop::ShopOrder::FULFILLED)
       end
 
@@ -54,7 +54,7 @@ RSpec.describe GamifiedShop::Refunds do
       end
     end
 
-    context "happy path" do
+    context "when the refund succeeds" do
       it "returns the points, ends the decoration, releases stock and flips the order" do
         order = place_order(user)
         decoration =
@@ -121,7 +121,7 @@ RSpec.describe GamifiedShop::Refunds do
       end
     end
 
-    context "errors" do
+    context "when the refund is invalid" do
       it "rejects a nonexistent order with order_not_found" do
         expect_shop_error(:order_not_found) do
           described_class.refund!(order_id: -1, refunded_by: admin)

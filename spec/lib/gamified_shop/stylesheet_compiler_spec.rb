@@ -33,7 +33,8 @@ RSpec.describe GamifiedShop::StylesheetCompiler do
         Fabricate(
           :gamified_shop_decoration_asset,
           style_preset: nil,
-          style_params: {},
+          style_params: {
+          },
           custom_css: "letter-spacing: 2px;",
         )
 

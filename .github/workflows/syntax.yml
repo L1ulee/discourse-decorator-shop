@@ -34,7 +34,10 @@ jobs:
           exit $status
 
       - name: YAML parses (config + locales)
-        run: ruby -ryaml -e 'Dir["config/**/*.yml"].each { |f| YAML.safe_load_file(f); puts "ok #{f}" }'
+        # Block scalar: a plain scalar here would let YAML treat " #{f}" as a
+        # comment, truncating the command and leaving an unbalanced quote.
+        run: |
+          ruby -ryaml -e 'Dir["config/**/*.yml"].each { |f| YAML.safe_load_file(f); puts "ok #{f}" }'
 
       - uses: actions/setup-node@v4
         with:

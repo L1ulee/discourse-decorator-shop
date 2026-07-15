@@ -24,15 +24,17 @@ module GamifiedShop
     end
 
     def equip
-      decoration =
-        Equipping.equip!(user: current_user, user_decoration_id: params[:id])
-      render_json_dump(decoration: serialize_data(decoration, UserDecorationSerializer))
+      decoration = Equipping.equip!(user: current_user, user_decoration_id: params[:id])
+      render_json_dump(
+        decoration: serialize_data(decoration, UserDecorationSerializer, root: false),
+      )
     end
 
     def unequip
-      decoration =
-        Equipping.unequip!(user: current_user, user_decoration_id: params[:id])
-      render_json_dump(decoration: serialize_data(decoration, UserDecorationSerializer))
+      decoration = Equipping.unequip!(user: current_user, user_decoration_id: params[:id])
+      render_json_dump(
+        decoration: serialize_data(decoration, UserDecorationSerializer, root: false),
+      )
     end
   end
 end

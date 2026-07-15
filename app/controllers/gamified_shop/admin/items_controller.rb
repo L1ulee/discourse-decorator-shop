@@ -13,7 +13,7 @@ module GamifiedShop
         item.item_type = ShopItem::DECORATION
         if item.save
           log_action("gamified_shop_create_item", item)
-          render_json_dump(item: serialize_data(item, ShopItemSerializer))
+          render_json_dump(item: serialize_data(item, ShopItemSerializer, root: false))
         else
           render_json_error(item)
         end
@@ -25,7 +25,7 @@ module GamifiedShop
 
         if item.update(item_params)
           log_action("gamified_shop_update_item", item)
-          render_json_dump(item: serialize_data(item, ShopItemSerializer))
+          render_json_dump(item: serialize_data(item, ShopItemSerializer, root: false))
         else
           render_json_error(item)
         end
@@ -48,11 +48,7 @@ module GamifiedShop
       end
 
       def log_action(name, item)
-        StaffActionLogger.new(current_user).log_custom(
-          name,
-          item_id: item.id,
-          item_name: item.name,
-        )
+        StaffActionLogger.new(current_user).log_custom(name, item_id: item.id, item_name: item.name)
       end
     end
   end

@@ -23,7 +23,7 @@ module GamifiedShop
 
       def refund
         order = Refunds.refund!(order_id: params[:id], refunded_by: current_user)
-        render_json_dump(order: serialize_data(order, ShopOrderSerializer))
+        render_json_dump(order: serialize_data(order, ShopOrderSerializer, root: false))
       end
     end
   end

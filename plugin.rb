@@ -80,25 +80,35 @@ after_initialize do
   Discourse::Application.routes.append do
     mount ::GamifiedShop::Engine, at: "/gamified-shop"
 
-    scope "/admin/plugins/gamified-shop", constraints: StaffConstraint.new do
-      get "/items" => "gamified_shop/admin/items#index"
-      post "/items" => "gamified_shop/admin/items#create"
-      put "/items/:id" => "gamified_shop/admin/items#update"
+    scope "/admin/plugins/gamified-shop" do
+      # Admin-only (items, orders, ledger): moderators fail the constraint and
+      # get a routing 404, so these endpoints stay hidden rather than leaking
+      # their existence with a 403. Controllers still inherit
+      # ::Admin::AdminController as defense in depth.
+      constraints(AdminConstraint.new) do
+        get "/items" => "gamified_shop/admin/items#index"
+        post "/items" => "gamified_shop/admin/items#create"
+        put "/items/:id" => "gamified_shop/admin/items#update"
 
-      get "/assets" => "gamified_shop/admin/assets#index"
-      post "/assets" => "gamified_shop/admin/assets#create"
-      delete "/assets/:id" => "gamified_shop/admin/assets#destroy"
+        get "/orders" => "gamified_shop/admin/orders#index"
+        post "/orders/:id/refund" => "gamified_shop/admin/orders#refund"
 
-      get "/users" => "gamified_shop/admin/users#index"
-      get "/users/:user_id" => "gamified_shop/admin/users#show"
-      post "/users/:user_id/points" => "gamified_shop/admin/users#adjust_points"
-      post "/users/:user_id/decorations" => "gamified_shop/admin/users#grant_decoration"
-      delete "/users/:user_id/decorations/:id" => "gamified_shop/admin/users#revoke_decoration"
+        get "/ledger" => "gamified_shop/admin/ledger#index"
+      end
 
-      get "/orders" => "gamified_shop/admin/orders#index"
-      post "/orders/:id/refund" => "gamified_shop/admin/orders#refund"
+      # Staff-reachable (assets, user grants); finer per-action checks
+      # (admin-only custom CSS, moderator grant setting) live in the controllers.
+      constraints(StaffConstraint.new) do
+        get "/assets" => "gamified_shop/admin/assets#index"
+        post "/assets" => "gamified_shop/admin/assets#create"
+        delete "/assets/:id" => "gamified_shop/admin/assets#destroy"
 
-      get "/ledger" => "gamified_shop/admin/ledger#index"
+        get "/users" => "gamified_shop/admin/users#index"
+        get "/users/:user_id" => "gamified_shop/admin/users#show"
+        post "/users/:user_id/points" => "gamified_shop/admin/users#adjust_points"
+        post "/users/:user_id/decorations" => "gamified_shop/admin/users#grant_decoration"
+        delete "/users/:user_id/decorations/:id" => "gamified_shop/admin/users#revoke_decoration"
+      end
     end
   end
 

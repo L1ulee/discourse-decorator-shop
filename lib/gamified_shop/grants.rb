@@ -7,9 +7,7 @@ module GamifiedShop
   class Grants
     def self.ensure_can_grant!(acting_user)
       return if acting_user&.admin?
-      if acting_user&.moderator? && SiteSetting.gamified_shop_allow_moderator_grants
-        return
-      end
+      return if acting_user&.moderator? && SiteSetting.gamified_shop_allow_moderator_grants
       raise Discourse::InvalidAccess.new
     end
 
@@ -21,8 +19,7 @@ module GamifiedShop
       # unlocks issuance (PRD 5.3).
       raise Discourse::InvalidAccess.new if amount.negative? && !acting_user&.admin?
 
-      entry_type =
-        amount.positive? ? PointLedgerEntry::ADMIN_GRANT : PointLedgerEntry::ADMIN_DEDUCT
+      entry_type = amount.positive? ? PointLedgerEntry::ADMIN_GRANT : PointLedgerEntry::ADMIN_DEDUCT
       entry =
         PointsLedger.apply!(
           user_id: user.id,
@@ -69,9 +66,7 @@ module GamifiedShop
       decoration = UserDecoration.find_by(id: user_decoration_id)
       raise ShopError.new(:decoration_not_found) if decoration.blank?
 
-      unless decoration.expired?
-        decoration.update!(equipped: false, expires_at: Time.zone.now)
-      end
+      decoration.update!(equipped: false, expires_at: Time.zone.now) unless decoration.expired?
       StaffActionLogger.new(acting_user).log_custom(
         "gamified_shop_revoke_decoration",
         target_user_id: decoration.user_id,

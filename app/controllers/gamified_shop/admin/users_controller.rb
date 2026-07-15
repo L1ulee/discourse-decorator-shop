@@ -17,17 +17,9 @@ module GamifiedShop
             .where(user_id: user.id)
             .includes(decoration_asset: :upload)
             .order(created_at: :desc)
-        ledger =
-          PointLedgerEntry
-            .where(user_id: user.id)
-            .order(id: :desc)
-            .limit(50)
+        ledger = PointLedgerEntry.where(user_id: user.id).order(id: :desc).limit(50)
         orders =
-          ShopOrder
-            .where(user_id: user.id)
-            .includes(:user, :shop_item)
-            .order(id: :desc)
-            .limit(50)
+          ShopOrder.where(user_id: user.id).includes(:user, :shop_item).order(id: :desc).limit(50)
 
         render_json_dump(
           user: BasicUserSerializer.new(user, root: false).as_json,
@@ -48,7 +40,7 @@ module GamifiedShop
             description: params[:description].presence,
           )
         render_json_dump(
-          entry: serialize_data(entry, PointLedgerEntrySerializer),
+          entry: serialize_data(entry, PointLedgerEntrySerializer, root: false),
           balance: PointAccount.balance_for(user.id),
         )
       end
@@ -61,7 +53,9 @@ module GamifiedShop
             decoration_asset_id: params.require(:decoration_asset_id),
             acting_user: current_user,
           )
-        render_json_dump(decoration: serialize_data(decoration, UserDecorationSerializer))
+        render_json_dump(
+          decoration: serialize_data(decoration, UserDecorationSerializer, root: false),
+        )
       end
 
       def revoke_decoration
@@ -70,11 +64,10 @@ module GamifiedShop
         raise ShopError.new(:decoration_not_found) if target.blank?
 
         decoration =
-          Grants.revoke_decoration!(
-            user_decoration_id: target.id,
-            acting_user: current_user,
-          )
-        render_json_dump(decoration: serialize_data(decoration, UserDecorationSerializer))
+          Grants.revoke_decoration!(user_decoration_id: target.id, acting_user: current_user)
+        render_json_dump(
+          decoration: serialize_data(decoration, UserDecorationSerializer, root: false),
+        )
       end
 
       private

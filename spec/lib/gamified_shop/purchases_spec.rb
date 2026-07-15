@@ -80,17 +80,13 @@ RSpec.describe GamifiedShop::Purchases do
       end
 
       it "rejects a nonexistent item with item_not_found" do
-        expect_shop_error(:item_not_found) do
-          described_class.purchase!(user: user, item_id: -1)
-        end
+        expect_shop_error(:item_not_found) { described_class.purchase!(user: user, item_id: -1) }
       end
 
       it "rejects a sold-out item with out_of_stock" do
         item.update!(stock: 0)
 
-        expect_shop_error(:out_of_stock) do
-          described_class.purchase!(user: user, item_id: item.id)
-        end
+        expect_shop_error(:out_of_stock) { described_class.purchase!(user: user, item_id: item.id) }
         expect(balance(user)).to eq(100)
         expect(GamifiedShop::ShopOrder.count).to eq(0)
         expect(item.reload.stock).to eq(0)

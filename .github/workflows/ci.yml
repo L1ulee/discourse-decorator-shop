@@ -24,3 +24,7 @@ jobs:
   ci:
     uses: discourse/.github/.github/workflows/discourse-plugin.yml@v1
     secrets: inherit
+    # Model schema annotations are not committed in this repo; skip the
+    # annotation drift check rather than vendoring generated comments.
+    with:
+      skip_annotations: true

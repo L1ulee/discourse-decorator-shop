@@ -32,9 +32,10 @@ module GamifiedShop
     before_update { raise ActiveRecord::ReadOnlyRecord, "ledger entries cannot be updated" }
 
     def self.earned_today(user_id)
-      where(user_id: user_id, entry_type: EVENT_REWARD)
-        .where("created_at >= ?", Time.zone.now.beginning_of_day)
-        .sum(:amount)
+      where(user_id: user_id, entry_type: EVENT_REWARD).where(
+        "created_at >= ?",
+        Time.zone.now.beginning_of_day,
+      ).sum(:amount)
     end
   end
 end

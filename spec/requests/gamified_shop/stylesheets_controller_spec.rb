@@ -18,6 +18,12 @@ RSpec.describe GamifiedShop::StylesheetsController do
     GamifiedShop::StylesheetCompiler.expire!
   end
 
+  # Rails re-serializes Cache-Control and does not preserve directive order
+  # (it emits "max-age=..., public, immutable"), so compare the directive set.
+  def cache_control_directives
+    response.headers["Cache-Control"].split(",").map(&:strip)
+  end
+
   describe "GET /gamified-shop/stylesheet/:digest.css" do
     let(:digest) { GamifiedShop::StylesheetCompiler.digest }
 
@@ -40,7 +46,7 @@ RSpec.describe GamifiedShop::StylesheetsController do
       get "/gamified-shop/stylesheet/#{digest}.css"
 
       expect(response.status).to eq(200)
-      expect(response.headers["Cache-Control"]).to eq("public, max-age=31556952, immutable")
+      expect(cache_control_directives).to contain_exactly("public", "max-age=31556952", "immutable")
     end
 
     it "sends a short cache header for a stale digest" do
@@ -48,7 +54,7 @@ RSpec.describe GamifiedShop::StylesheetsController do
 
       expect(response.status).to eq(200)
       expect(response.media_type).to eq("text/css")
-      expect(response.headers["Cache-Control"]).to eq("public, max-age=60")
+      expect(cache_control_directives).to contain_exactly("public", "max-age=60")
     end
 
     it "contains the .gds-asset-<id> rule for a username style asset" do
@@ -74,7 +80,7 @@ RSpec.describe GamifiedShop::StylesheetsController do
       get "/gamified-shop/stylesheet/#{new_digest}.css"
 
       expect(response.status).to eq(200)
-      expect(response.headers["Cache-Control"]).to eq("public, max-age=31556952, immutable")
+      expect(cache_control_directives).to contain_exactly("public", "max-age=31556952", "immutable")
       expect(response.body).to include("color: #00ff00 !important;")
     end
   end

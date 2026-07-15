@@ -7,10 +7,13 @@ require "rails_helper"
 # (PRD 16.1) - not by calling GamifiedShop::Earnings directly.
 describe "GamifiedShop event wiring" do
   fab!(:user)
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:other_user, :user)
 
   before do
     SiteSetting.gamified_shop_enabled = true
+    # PostCreator without a category targets Uncategorized, which is disallowed
+    # by default and would raise Discourse::InvalidAccess ("can_create? failed").
+    SiteSetting.allow_uncategorized_topics = true
     SiteSetting.gamified_shop_topic_created_points = 5
     SiteSetting.gamified_shop_reply_created_points = 2
     SiteSetting.gamified_shop_like_received_points = 1
