@@ -8,8 +8,10 @@ require "rails_helper"
 describe "GamifiedShop event wiring" do
   fab!(:user)
   fab!(:other_user, :user)
-  # Topics are created in an explicit category: relying on Uncategorized fails
-  # in the test DB with Discourse::InvalidAccess ("can_create? failed").
+  # This test exercises the earning events, not permissions. A fabricated user
+  # cannot clear the topic-creation guardian in the test DB (Discourse::
+  # InvalidAccess "can_create? failed"), so PostCreator is called with
+  # skip_guardian: true; the explicit category keeps the topic save valid.
   fab!(:category)
 
   before do
@@ -31,6 +33,7 @@ describe "GamifiedShop event wiring" do
         title: "A perfectly valid shop wiring topic",
         raw: "This is a long enough body for the topic under test.",
         category: category.id,
+        skip_guardian: true,
       )
     expect(balance_of(user)).to eq(5)
 
@@ -39,6 +42,7 @@ describe "GamifiedShop event wiring" do
         other_user,
         topic_id: op.topic_id,
         raw: "This is a long enough reply body for the test.",
+        skip_guardian: true,
       )
     expect(balance_of(other_user)).to eq(2)
 
@@ -59,11 +63,13 @@ describe "GamifiedShop event wiring" do
         title: "Another perfectly valid shop wiring topic",
         raw: "This is a long enough body for the second topic.",
         category: category.id,
+        skip_guardian: true,
       )
     PostCreator.create!(
       other_user,
       topic_id: op.topic_id,
       raw: "This is a long enough reply body for the cascade test.",
+      skip_guardian: true,
     )
     expect(balance_of(user)).to eq(5)
     expect(balance_of(other_user)).to eq(2)
