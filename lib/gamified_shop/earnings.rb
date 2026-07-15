@@ -125,11 +125,15 @@ module GamifiedShop
         Post.where(topic_id: topic.id, deleted_at: nil).where("post_number > 1")
       end
 
+      # with_deleted on purpose: PostDestroyer trashes a post's like
+      # PostActions (sets deleted_at) as it fires :post_destroyed, so
+      # Trashable's default scope would hide the very likes whose rewards must
+      # be clawed back. Reversal/restore stay correct because reverse_trigger
+      # is idempotent and restore_trigger is filtered by restore_kinds.
       def like_actions_for(post)
-        PostAction.where(
+        PostAction.with_deleted.where(
           post_id: post.id,
           post_action_type_id: PostActionType.types[:like],
-          deleted_at: nil,
         )
       end
 
