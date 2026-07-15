@@ -1,0 +1,82 @@
+// Gamified Decoration Shop - core decoration rendering.
+// Per-asset values (frame images, username styles, card backgrounds) come
+// from the compiled dynamic stylesheet (/gamified-shop/stylesheet/:digest.css)
+// via CSS custom properties; this file only defines how each slot consumes
+// them. All selectors are namespaced with gds- (PRD 18.4).
+
+// --- Avatar frame: post stream ---
+// The compiled stylesheet sets --gds-frame-image on `article.gds-af-<id>
+// .topic-avatar`; the overlay renders as a pseudo-element around the avatar.
+article[class*="gds-af-"] .topic-avatar .post-avatar {
+  position: relative;
+}
+
+article[class*="gds-af-"] .topic-avatar .post-avatar::after {
+  content: "";
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  width: 120%;
+  height: 120%;
+  background: var(--gds-frame-image) center / contain no-repeat;
+  pointer-events: none;
+  z-index: 2;
+}
+
+// --- Avatar frame: direct mounts (user card, profile, shop preview) ---
+// Mount element carries .gds-avatar-frame plus .gds-asset-<id>; the compiled
+// stylesheet provides --gds-frame-image for that asset class.
+.gds-avatar-frame {
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  width: 120%;
+  height: 120%;
+  background: var(--gds-frame-image) center / contain no-repeat;
+  pointer-events: none;
+  z-index: 2;
+}
+
+// --- User card background ---
+// JS adds .gds-asset-<id> to the card root; the compiled stylesheet provides
+// --gds-card-bg-image for it.
+.user-card[class*="gds-asset-"] {
+  background-image: var(--gds-card-bg-image);
+  background-size: cover;
+  background-position: center;
+}
+
+// --- Username style presets: shared keyframes ---
+@keyframes gds-rainbow-text {
+  0% {
+    color: #ff3b30;
+  }
+  20% {
+    color: #ff9500;
+  }
+  40% {
+    color: #34c759;
+  }
+  60% {
+    color: #007aff;
+  }
+  80% {
+    color: #af52de;
+  }
+  100% {
+    color: #ff3b30;
+  }
+}
+
+// --- Accessibility: animated decorations freeze under reduced motion ---
+// (Animated image frames are additionally hidden by the compiled stylesheet,
+// since GIF/WebP playback cannot be paused with CSS.)
+@media (prefers-reduced-motion: reduce) {
+  [class*="gds-asset-"],
+  [class*="gds-asset-"] *,
+  article[class*="gds-un-"] .names .first a,
+  .gds-avatar-frame {
+    animation: none !important;
+    transition: none !important;
+  }
+}

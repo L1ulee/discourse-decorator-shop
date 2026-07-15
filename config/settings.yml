@@ -1,0 +1,26 @@
+plugins:
+  gamified_shop_enabled:
+    default: false
+    client: true
+  gamified_shop_currency_name:
+    default: "Points"
+    client: true
+  gamified_shop_topic_created_points:
+    default: 5
+    min: 0
+    max: 100000
+  gamified_shop_reply_created_points:
+    default: 2
+    min: 0
+    max: 100000
+  gamified_shop_like_received_points:
+    default: 1
+    min: 0
+    max: 100000
+  gamified_shop_daily_earn_cap:
+    default: 100
+    min: 0
+    max: 1000000
+  gamified_shop_allow_moderator_grants:
+    default: false
+    client: true

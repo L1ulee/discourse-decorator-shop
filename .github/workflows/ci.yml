@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - "release/**"
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: plugin-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # Discourse's maintained reusable workflow: boots a Discourse instance with
+  # this plugin installed, runs RSpec + QUnit, and runs the linters
+  # (rubocop / syntax_tree / prettier / eslint / ember-template-lint / stylelint)
+  # against the configs in this repo. Kept version-pinned to @v1 so it tracks
+  # the stable channel this plugin targets.
+  ci:
+    uses: discourse/.github/.github/workflows/discourse-plugin.yml@v1
+    secrets: inherit
+    # Model schema annotations are not committed in this repo; skip the
+    # annotation drift check rather than vendoring generated comments.
+    with:
+      skip_annotations: true

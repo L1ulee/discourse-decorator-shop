@@ -1,0 +1,104 @@
+<div class="gamified-shop-admin-items">
+  <div class="gamified-shop-admin__controls">
+    <DButton
+      class="btn-primary gamified-shop-admin-items__new"
+      @icon="plus"
+      @label="gamified_shop.admin.items.new"
+      @action={{this.newItem}}
+    />
+  </div>
+
+  {{#if this.showForm}}
+    <div class="gamified-shop-admin-form gamified-shop-admin-items__form">
+      <div class="gamified-shop-admin-form__row">
+        <label>{{i18n "gamified_shop.admin.items.name"}}</label>
+        <TextField @value={{this.formName}} />
+      </div>
+
+      <div class="gamified-shop-admin-form__row">
+        <label>{{i18n "gamified_shop.admin.items.description"}}</label>
+        <Textarea @value={{this.formDescription}} />
+      </div>
+
+      <div class="gamified-shop-admin-form__row">
+        <label>{{i18n "gamified_shop.admin.items.price"}}</label>
+        <Input @type="number" min="0" @value={{this.formPrice}} />
+      </div>
+
+      <div class="gamified-shop-admin-form__row">
+        <label>{{i18n "gamified_shop.admin.items.stock"}}</label>
+        <Input @type="number" min="0" @value={{this.formStock}} />
+      </div>
+
+      <div class="gamified-shop-admin-form__row">
+        <label>{{i18n "gamified_shop.admin.items.purchase_limit"}}</label>
+        <Input @type="number" min="0" @value={{this.formLimit}} />
+      </div>
+
+      <div class="gamified-shop-admin-form__row">
+        <label>
+          <Input @type="checkbox" @checked={{this.formListed}} />
+          {{i18n "gamified_shop.admin.items.listed"}}
+        </label>
+      </div>
+
+      <div class="gamified-shop-admin-form__row">
+        <label>{{i18n "gamified_shop.admin.items.asset"}}</label>
+        <ComboBox
+          @content={{this.assetOptions}}
+          @value={{this.formAssetId}}
+          @onChange={{this.updateFormAssetId}}
+        />
+      </div>
+
+      <div class="gamified-shop-admin-form__actions">
+        <DButton
+          class="btn-primary"
+          @label="gamified_shop.admin.items.save"
+          @action={{this.save}}
+          @disabled={{this.saving}}
+        />
+        <DButton
+          @label="gamified_shop.admin.items.cancel"
+          @action={{this.cancel}}
+        />
+      </div>
+    </div>
+  {{/if}}
+
+  <table class="gamified-shop-admin-table gamified-shop-admin-items__table">
+    <thead>
+      <tr>
+        <th>{{i18n "gamified_shop.admin.items.name"}}</th>
+        <th>{{i18n "gamified_shop.admin.items.price"}}</th>
+        <th>{{i18n "gamified_shop.admin.items.stock"}}</th>
+        <th>{{i18n "gamified_shop.admin.items.purchase_limit"}}</th>
+        <th>{{i18n "gamified_shop.admin.items.listed"}}</th>
+        <th>{{i18n "gamified_shop.admin.items.asset"}}</th>
+        <th>{{i18n "gamified_shop.admin.actions"}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each this.rows key="item.id" as |row|}}
+        <tr
+          class="gamified-shop-admin-items__row
+            {{unless row.item.listed 'gamified-shop-admin-items__row--unlisted'}}"
+        >
+          <td>{{row.item.name}}</td>
+          <td>{{row.item.price}}</td>
+          <td>{{row.stockLabel}}</td>
+          <td>{{row.limitLabel}}</td>
+          <td>{{row.listedLabel}}</td>
+          <td>{{row.assetLabel}}</td>
+          <td>
+            <DButton
+              @icon="pencil"
+              @label="gamified_shop.admin.items.edit"
+              @action={{fn this.editItem row.item}}
+            />
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>

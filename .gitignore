@@ -1,0 +1,39 @@
+# --- Ruby / Bundler (dev tooling only; see Gemfile) ---
+Gemfile.lock
+*.gem
+.bundle/
+/vendor/bundle/
+
+# --- Node / lint tooling ---
+node_modules/
+npm-debug.log*
+yarn-error.log
+yarn-debug.log*
+.pnp.*
+.yarn/*
+!.yarn/patches
+
+# --- Discourse / build artifacts ---
+/auto_generated/
+/public/
+/gems/
+
+# --- Logs & temp ---
+*.log
+/tmp/
+/coverage/
+
+# --- OS / editor cruft ---
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# --- Kept local, not published to the repo ---
+AGENTS.md
+CLAUDE.md
+CONTEXT.md
+docs/

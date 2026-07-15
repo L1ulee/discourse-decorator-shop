@@ -1,0 +1,17 @@
+{
+  "name": "discourse-decorator-shop",
+  "version": "0.1.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/L1ulee/discourse-decorator-shop.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@discourse/lint-configs": "^2.0.0",
+    "ember-template-lint": "^6.0.0",
+    "eslint": "^9.0.0",
+    "prettier": "^3.0.0",
+    "stylelint": "^16.0.0"
+  }
+}

@@ -1,0 +1,52 @@
+name: Syntax
+
+# Fast, dependency-free sanity checks that run without booting Discourse.
+# Complements the full CI (ci.yml); useful signal on forks/CI where a
+# Discourse checkout is unavailable.
+
+on:
+  push:
+    branches:
+      - main
+      - "release/**"
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+
+      - name: Ruby syntax (ruby -c)
+        run: |
+          status=0
+          while IFS= read -r file; do
+            ruby -c "$file" >/dev/null || { echo "SYNTAX ERROR: $file"; status=1; }
+          done < <(find . -name '*.rb' -not -path './vendor/*')
+          exit $status
+
+      - name: YAML parses (config + locales)
+        # Block scalar: a plain scalar here would let YAML treat " #{f}" as a
+        # comment, truncating the command and leaving an unbalanced quote.
+        run: |
+          ruby -ryaml -e 'Dir["config/**/*.yml"].each { |f| YAML.safe_load_file(f); puts "ok #{f}" }'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Plain JS syntax (node --check)
+        run: |
+          status=0
+          while IFS= read -r file; do
+            node --check "$file" || { echo "SYNTAX ERROR: $file"; status=1; }
+          done < <(find assets -name '*.js')
+          exit $status
