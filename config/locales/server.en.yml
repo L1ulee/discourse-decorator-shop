@@ -1,0 +1,37 @@
+en:
+  site_settings:
+    gamified_shop_enabled: "Enable the Gamified Decoration Shop plugin."
+    gamified_shop_currency_name: "Display name of the shop currency (e.g. Credits). Balances are shown as '<name>: <amount>'."
+    gamified_shop_topic_created_points: "Points earned for creating a new topic. 0 disables this event."
+    gamified_shop_reply_created_points: "Points earned for posting a reply. 0 disables this event."
+    gamified_shop_like_received_points: "Points earned when one of your posts receives a like. 0 disables this event."
+    gamified_shop_daily_earn_cap: "Maximum points a user can earn per day from behavior (gross credits; reversals do not give headroom back). 0 means no cap."
+    gamified_shop_allow_moderator_grants: "Allow moderators to grant points and grant decorations (deducting points and revoking decorations stay admin-only). All grants are recorded in the staff action log."
+  gamified_shop:
+    errors:
+      item_not_found: "That item does not exist or is not available."
+      item_not_purchasable: "That item cannot be purchased."
+      insufficient_balance: "Your balance is not high enough for this purchase."
+      purchase_limit_reached: "You have reached the purchase limit for this item."
+      out_of_stock: "This item is out of stock."
+      order_not_found: "That order does not exist."
+      order_not_refundable: "Only fulfilled orders can be refunded."
+      invalid_amount: "The amount must be a non-zero integer."
+      asset_not_found: "That decoration asset does not exist."
+      asset_in_use: "This asset is bound to a shop item or owned by users and cannot be deleted. Unlist the item instead."
+      decoration_not_found: "That decoration does not exist."
+      decoration_expired: "This decoration has expired and cannot be equipped."
+    css_errors:
+      too_long: "custom CSS exceeds the 4KB limit"
+      forbidden_characters: "custom CSS may not contain braces, at-rules (@), backslashes or angle brackets"
+      forbidden_functions: "custom CSS may not use resource-loading functions (image-set, cross-fade, element, paint, src)"
+      comments_not_allowed: "custom CSS may not contain comments"
+      unbalanced_quotes: "custom CSS contains unbalanced quotes"
+      malformed_url: "custom CSS contains a malformed url() call"
+      external_url: "url() may only reference local uploads (/uploads/...)"
+      invalid_declaration: "custom CSS must be a list of 'property: value;' declarations"
+    style_errors:
+      unknown_preset: "unknown style preset"
+      invalid_params: "style params must be a map of preset parameters"
+      unknown_param: "style params contain a parameter this preset does not accept"
+      invalid_color: "preset parameters must be hex colors like #aabbcc"

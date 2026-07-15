@@ -1,0 +1,347 @@
+// Gamified Decoration Shop — user-facing store & "my decorations" pages.
+// All selectors are namespaced with gds- (PRD 18.4). Colors come from core
+// Discourse CSS custom properties so light/dark color schemes both work.
+
+// --- Shared page chrome (/gamified-shop) ---
+
+.gds-shop-page {
+  &__masthead {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5em 1.5em;
+    margin-bottom: 1em;
+    border-bottom: 1px solid var(--primary-low);
+    padding-bottom: 0.75em;
+  }
+
+  &__title {
+    margin: 0;
+  }
+
+  &__nav {
+    display: flex;
+    gap: 0.25em;
+
+    &-link {
+      padding: 0.4em 0.85em;
+      border-radius: var(--d-border-radius);
+      color: var(--primary-high);
+      font-weight: 600;
+
+      &:hover {
+        background: var(--primary-very-low);
+        color: var(--primary);
+      }
+
+      &.active {
+        background: var(--tertiary-low);
+        color: var(--tertiary);
+      }
+    }
+  }
+}
+
+// --- Balance pill (store + decorations headers) ---
+
+.gds-shop-balance {
+  display: inline-block;
+  padding: 0.35em 0.9em;
+  border-radius: 1em;
+  background: var(--tertiary-low);
+  color: var(--tertiary);
+  font-weight: 700;
+}
+
+// --- Store page ---
+
+.gds-shop-store {
+  &__header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1em;
+  }
+
+  &__empty {
+    margin: 2em 0;
+    color: var(--primary-medium);
+    font-style: italic;
+  }
+}
+
+.gds-shop-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin-bottom: 1.5em;
+
+  &__btn {
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    color: var(--primary-high);
+
+    &:hover {
+      background: var(--primary-very-low);
+    }
+
+    &--active,
+    &--active:hover {
+      background: var(--tertiary);
+      border-color: var(--tertiary);
+      color: var(--secondary);
+    }
+  }
+}
+
+.gds-shop-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
+  gap: 1em;
+}
+
+.gds-shop-item-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--primary-low);
+  border-radius: var(--d-border-radius);
+  background: var(--secondary);
+  overflow: hidden;
+
+  &__image-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 8em;
+    background: var(--primary-very-low);
+  }
+
+  &__image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    gap: 0.35em;
+    padding: 0.85em;
+  }
+
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5em;
+  }
+
+  &__name {
+    color: var(--primary);
+    font-size: var(--font-up-1);
+    font-weight: 700;
+  }
+
+  &__slot {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  &__description {
+    margin: 0;
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25em 1.5em;
+    margin: 0.25em 0 0;
+
+    &-entry {
+      display: flex;
+      align-items: baseline;
+      gap: 0.4em;
+    }
+
+    dt {
+      color: var(--primary-medium);
+      font-size: var(--font-down-1);
+      font-weight: normal;
+    }
+
+    dd {
+      margin: 0;
+      color: var(--primary);
+      font-weight: 600;
+    }
+  }
+
+  &__price {
+    color: var(--tertiary);
+  }
+
+  &__limit {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: auto;
+    padding: 0.85em;
+    border-top: 1px solid var(--primary-very-low);
+  }
+
+  &__buy {
+    width: 100%;
+  }
+}
+
+// --- Badges (owned / stock / equipped / expired) ---
+
+.gds-badge {
+  display: inline-block;
+  padding: 0.15em 0.6em;
+  border-radius: 1em;
+  font-size: var(--font-down-2);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+
+  &--owned {
+    background: var(--success-low);
+    color: var(--success);
+  }
+
+  &--out-of-stock {
+    background: var(--danger-low);
+    color: var(--danger);
+  }
+
+  &--equipped {
+    background: var(--tertiary-low);
+    color: var(--tertiary);
+  }
+
+  &--expired {
+    background: var(--primary-low);
+    color: var(--primary-medium);
+  }
+}
+
+// --- My decorations page ---
+
+.gds-decorations {
+  &__header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1em;
+  }
+
+  &__empty {
+    margin: 2em 0;
+    color: var(--primary-medium);
+    font-style: italic;
+  }
+}
+
+.gds-decorations-group {
+  margin-bottom: 2em;
+
+  &__title {
+    margin: 0 0 0.5em;
+    font-size: var(--font-up-1);
+    color: var(--primary);
+    border-bottom: 1px solid var(--primary-low);
+    padding-bottom: 0.35em;
+  }
+
+  &__rows {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.gds-decoration-row {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  padding: 0.75em 0.25em;
+  border-bottom: 1px solid var(--primary-very-low);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &--equipped {
+    background: var(--tertiary-very-low, var(--primary-very-low));
+  }
+
+  &--expired {
+    opacity: 0.65;
+  }
+
+  &__image {
+    width: 3em;
+    height: 3em;
+    object-fit: contain;
+    flex: 0 0 auto;
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2em;
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  &__name-line {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5em;
+  }
+
+  &__name {
+    color: var(--primary);
+    font-weight: 700;
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25em 1em;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  &__actions {
+    flex: 0 0 auto;
+  }
+}
+
+// --- Small screens ---
+
+.mobile-view {
+  .gds-shop-items {
+    grid-template-columns: 1fr;
+  }
+
+  .gds-decoration-row {
+    flex-wrap: wrap;
+
+    &__actions {
+      width: 100%;
+
+      .btn {
+        width: 100%;
+      }
+    }
+  }
+}

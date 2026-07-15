@@ -1,0 +1,34 @@
+<div class="gamified-shop-admin">
+  <h2>{{i18n "gamified_shop.admin.title"}}</h2>
+
+  <ul class="nav nav-pills gamified-shop-admin__nav">
+    {{#if this.currentUser.admin}}
+      <NavItem
+        @route="adminPlugins.gamified-shop.items"
+        @label="gamified_shop.admin.nav.items"
+      />
+    {{/if}}
+    <NavItem
+      @route="adminPlugins.gamified-shop.assets"
+      @label="gamified_shop.admin.nav.assets"
+    />
+    <NavItem
+      @route="adminPlugins.gamified-shop.users"
+      @label="gamified_shop.admin.nav.users"
+    />
+    {{#if this.currentUser.admin}}
+      <NavItem
+        @route="adminPlugins.gamified-shop.orders"
+        @label="gamified_shop.admin.nav.orders"
+      />
+      <NavItem
+        @route="adminPlugins.gamified-shop.ledger"
+        @label="gamified_shop.admin.nav.ledger"
+      />
+    {{/if}}
+  </ul>
+
+  <div class="gamified-shop-admin__body">
+    {{outlet}}
+  </div>
+</div>

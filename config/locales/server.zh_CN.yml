@@ -1,0 +1,37 @@
+zh_CN:
+  site_settings:
+    gamified_shop_enabled: "启用装饰商城插件。"
+    gamified_shop_currency_name: "商城货币的显示名称（例如 Credits）。余额展示格式为“<货币名>: <数量>”。"
+    gamified_shop_topic_created_points: "发布新话题获得的点数。0 表示关闭该事件。"
+    gamified_shop_reply_created_points: "发布回复获得的点数。0 表示关闭该事件。"
+    gamified_shop_like_received_points: "帖子收到一个赞时获得的点数。0 表示关闭该事件。"
+    gamified_shop_daily_earn_cap: "每日行为获点上限（按当日毛入账计，回收不退还额度）。0 表示不设上限。"
+    gamified_shop_allow_moderator_grants: "允许版主发放点数和发放装饰（扣减点数与撤销装饰仍仅限管理员）。所有发放操作都会记入管理操作日志。"
+  gamified_shop:
+    errors:
+      item_not_found: "该商品不存在或未上架。"
+      item_not_purchasable: "该商品当前不可购买。"
+      insufficient_balance: "余额不足，无法完成本次购买。"
+      purchase_limit_reached: "已达到该商品的限购数量。"
+      out_of_stock: "该商品库存不足。"
+      order_not_found: "订单不存在。"
+      order_not_refundable: "只有已完成的订单可以退款。"
+      invalid_amount: "数量必须是非零整数。"
+      asset_not_found: "装饰资源不存在。"
+      asset_in_use: "该资源已绑定商品或已被用户拥有，不能删除。请改为下架相关商品。"
+      decoration_not_found: "该装饰不存在。"
+      decoration_expired: "该装饰已过期，无法启用。"
+    css_errors:
+      too_long: "自定义 CSS 超过 4KB 上限"
+      forbidden_characters: "自定义 CSS 不允许包含大括号、@ 规则、反斜杠或尖括号"
+      forbidden_functions: "自定义 CSS 不允许使用可加载资源的函数（image-set、cross-fade、element、paint、src）"
+      comments_not_allowed: "自定义 CSS 不允许包含注释"
+      unbalanced_quotes: "自定义 CSS 引号不配对"
+      malformed_url: "自定义 CSS 包含格式错误的 url() 调用"
+      external_url: "url() 只能引用本站上传资源（/uploads/…）"
+      invalid_declaration: "自定义 CSS 必须是“属性: 值;”形式的声明列表"
+    style_errors:
+      unknown_preset: "未知的样式预设"
+      invalid_params: "样式参数必须是预设参数的键值对"
+      unknown_param: "样式参数包含该预设不支持的参数"
+      invalid_color: "预设参数必须是形如 #aabbcc 的十六进制颜色"
