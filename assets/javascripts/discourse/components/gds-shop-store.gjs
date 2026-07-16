@@ -116,8 +116,12 @@ export default class GdsShopStore extends Component {
         <button
           type="button"
           class={{concatClass
-            "btn btn-default gds-shop-filters__btn"
-            (unless this.slotFilter "gds-shop-filters__btn--active")
+            "btn gds-shop-filters__btn"
+            (if
+              this.slotFilter
+              "btn-default"
+              "btn-primary gds-shop-filters__btn--active"
+            )
           }}
           {{on "click" (fn this.setSlotFilter null)}}
         >
@@ -128,9 +132,11 @@ export default class GdsShopStore extends Component {
           <button
             type="button"
             class={{concatClass
-              "btn btn-default gds-shop-filters__btn"
+              "btn gds-shop-filters__btn"
               (if
-                (eq this.slotFilter slot) "gds-shop-filters__btn--active"
+                (eq this.slotFilter slot)
+                "btn-primary gds-shop-filters__btn--active"
+                "btn-default"
               )
             }}
             {{on "click" (fn this.setSlotFilter slot)}}

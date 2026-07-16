@@ -75,22 +75,10 @@
   gap: 0.5em;
   margin-bottom: 1.5em;
 
-  &__btn {
-    background: var(--secondary);
-    border: 1px solid var(--primary-low);
-    color: var(--primary-high);
-
-    &:hover {
-      background: var(--primary-very-low);
-    }
-
-    &--active,
-    &--active:hover {
-      background: var(--tertiary);
-      border-color: var(--tertiary);
-      color: var(--secondary);
-    }
-  }
+  // The filter chips are native Discourse buttons: .btn-primary when the slot
+  // is selected (guaranteed-readable contrast in every colour scheme) and
+  // .btn-default otherwise. No colour overrides here, so they match the theme
+  // and keep a legible selected state (issue #3).
 }
 
 .gds-shop-items {
