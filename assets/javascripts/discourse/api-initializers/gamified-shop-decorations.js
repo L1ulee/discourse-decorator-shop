@@ -4,10 +4,12 @@ import { apiInitializer } from "discourse/lib/api";
 //
 // The post serializer ships `gamified_shop` as a plain map of equipped slots
 // ({ avatar_frame: assetId?, username_style: assetId? }); all rendering is
-// driven by CSS classes on the post article element:
+// driven by CSS classes. addPostClassesCallback applies them to the post
+// wrapper `div.topic-post` (NOT the inner <article>), so the CSS anchors on
+// the class:
 //   - gds-af-<assetId>  avatar frame (compiled stylesheet + gamified-shop.scss)
 //   - gds-un-<assetId>  username style (compiled stylesheet targets
-//                       `article.gds-un-<id> .names .first a`)
+//                       `.gds-un-<id> .names .first a`)
 //
 // Deliberately no widget decorators here — `addPostClassesCallback` is the
 // long-stable API that survives the Glimmer post stream.

@@ -62,7 +62,7 @@ RSpec.describe GamifiedShop::StylesheetsController do
 
       expect(response.status).to eq(200)
       expect(response.body).to include(".gds-asset-#{asset.id}")
-      expect(response.body).to include("article.gds-un-#{asset.id}")
+      expect(response.body).to include(".gds-un-#{asset.id}")
       expect(response.body).to include("color: #ff0000 !important;")
     end
 

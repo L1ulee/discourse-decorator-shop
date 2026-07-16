@@ -7,10 +7,13 @@ module GamifiedShop
   #
   # Selector conventions consumed by the static plugin SCSS and the JS side:
   # - .gds-asset-<id>                 direct mounts (user card, profile, shop preview)
-  # - article.gds-af-<id>             post article carrying an avatar frame
-  # - article.gds-un-<id>             post article carrying a username style
+  # - .gds-af-<id>                    post wrapper (div.topic-post) carrying a frame
+  # - .gds-un-<id>                    post wrapper (div.topic-post) carrying a name style
+  # addPostClassesCallback puts these on the .topic-post wrapper, not the inner
+  # <article>, so the post selectors anchor on the class rather than `article`.
   class StylesheetCompiler
-    CACHE_KEY = "gamified-shop:compiled-stylesheet:v1"
+    # Bump the version to force a recompile when the generated selectors change.
+    CACHE_KEY = "gamified-shop:compiled-stylesheet:v2"
 
     def self.css
       current["css"]
@@ -47,17 +50,17 @@ module GamifiedShop
           asset.custom_css.presence,
         ].compact.join(" ")
         return "" if declarations.blank?
-        ".gds-asset-#{asset.id}, article.gds-un-#{asset.id} .names .first a" \
+        ".gds-asset-#{asset.id}, .gds-un-#{asset.id} .names .first a" \
           " { #{declarations} }\n"
       when DecorationAsset::AVATAR_FRAME
         url = safe_url(asset.image_url)
         return "" if url.blank?
         rules =
-          ".gds-asset-#{asset.id}, article.gds-af-#{asset.id} .topic-avatar" \
+          ".gds-asset-#{asset.id}, .gds-af-#{asset.id} .topic-avatar" \
             " { --gds-frame-image: url('#{url}'); }\n"
         if asset.animated?
           rules << "@media (prefers-reduced-motion: reduce) {" \
-            " .gds-asset-#{asset.id}, article.gds-af-#{asset.id} .topic-avatar" \
+            " .gds-asset-#{asset.id}, .gds-af-#{asset.id} .topic-avatar" \
             " { --gds-frame-image: none; } }\n"
         end
         rules
