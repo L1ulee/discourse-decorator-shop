@@ -7,12 +7,22 @@
 // --- Avatar frame: post stream ---
 // addPostClassesCallback tags the post wrapper `div.topic-post` (not the inner
 // <article>) with `gds-af-<id>`; the compiled stylesheet sets --gds-frame-image
-// on `.gds-af-<id> .topic-avatar`, and the overlay renders as a pseudo-element.
-[class*="gds-af-"] .topic-avatar .post-avatar {
+// on `.gds-af-<id> .topic-avatar`, inherited by the overlay pseudo-element.
+//
+// The overlay is anchored on `.main-avatar` — the <a> (from core's
+// post/avatar.gjs → DUserAvatar → DUserLink) that tightly wraps ONLY the
+// <img.avatar>. It is deliberately NOT `.post-avatar`: that box also contains
+// the group-flair badge and a `.post-avatar-user-info` div, so sizing a 145%
+// overlay to it left the frame oversized and offset from the avatar (the
+// reported mismatch). `.main-avatar` == the image box, so the frame lands on
+// the avatar exactly. `inline-flex` drops the inline baseline gap so the box
+// is the image's height precisely (an <img> cannot take an ::after itself).
+[class*="gds-af-"] .topic-avatar .main-avatar {
   position: relative;
+  display: inline-flex;
 }
 
-[class*="gds-af-"] .topic-avatar .post-avatar::after {
+[class*="gds-af-"] .topic-avatar .main-avatar::after {
   content: "";
   position: absolute;
   top: -22.5%;
