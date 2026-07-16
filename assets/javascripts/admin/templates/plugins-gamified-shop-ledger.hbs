@@ -43,7 +43,7 @@
         {{#each this.entries key="id" as |entry|}}
           <tr class="gamified-shop-admin-ledger__row">
             <td>{{format-date entry.created_at format="medium"}}</td>
-            <td>{{entry.user_id}}</td>
+            <td>{{entry.username}}</td>
             <td>{{entry.entry_type}}</td>
             <td>{{entry.amount}}</td>
             <td>{{entry.balance_after}}</td>

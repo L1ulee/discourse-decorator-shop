@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { modifier } from "ember-modifier";
 import GdsUserBalance from "discourse/plugins/discourse-decorator-shop/discourse/components/gds-user-balance";
+import { sizeAvatarFrame } from "discourse/plugins/discourse-decorator-shop/discourse/lib/gds-avatar-frame";
 
 // User profile decoration integration (PRD 12): balance line + equipped
 // avatar frame overlay + username style class.
@@ -52,6 +53,7 @@ export default class GamifiedShopProfile extends Component {
         frame.classList.add("gds-avatar-frame", `gds-asset-${shop.avatar_frame}`);
         frame.setAttribute("aria-hidden", "true");
         mount.appendChild(frame);
+        sizeAvatarFrame(frame, avatarImage);
         cleanups.push(() => frame.remove());
       }
     }

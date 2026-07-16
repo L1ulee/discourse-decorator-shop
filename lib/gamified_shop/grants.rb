@@ -37,7 +37,7 @@ module GamifiedShop
       entry
     end
 
-    def self.grant_decoration!(user:, decoration_asset_id:, acting_user:)
+    def self.grant_decoration!(user:, decoration_asset_id:, acting_user:, expires_at: nil)
       ensure_can_grant!(acting_user)
       asset = DecorationAsset.find_by(id: decoration_asset_id)
       raise ShopError.new(:asset_not_found) if asset.blank?
@@ -49,11 +49,13 @@ module GamifiedShop
           source: UserDecoration::ADMIN_GRANT,
           source_id: acting_user.id,
           equipped: false,
+          expires_at: expires_at,
         )
       StaffActionLogger.new(acting_user).log_custom(
         "gamified_shop_grant_decoration",
         target_user_id: user.id,
         decoration_asset_id: asset.id,
+        expires_at: expires_at,
       )
       decoration
     end

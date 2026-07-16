@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { modifier } from "ember-modifier";
 import GdsUserBalance from "discourse/plugins/discourse-decorator-shop/discourse/components/gds-user-balance";
+import { sizeAvatarFrame } from "discourse/plugins/discourse-decorator-shop/discourse/lib/gds-avatar-frame";
 
 // User card decoration integration (PRD 12).
 //
@@ -45,9 +46,16 @@ export default class GamifiedShopUserCard extends Component {
     }
 
     if (shop.username_style) {
-      const nameElement = card.querySelector(
-        ".names .username a, .names .username, .name-username-wrapper"
-      );
+      // Target the innermost username link/text, not the container: a
+      // comma-list querySelector returns the first match in document order
+      // (the ancestor .names__primary div), so the style would land on the
+      // wrapper while the inner <a> keeps its own link colour (issue #2).
+      const nameElement =
+        card.querySelector(".name-username-wrapper") ||
+        card.querySelector(".names__primary a") ||
+        card.querySelector(".names .username a") ||
+        card.querySelector(".names__primary") ||
+        card.querySelector(".names .username");
 
       if (nameElement) {
         const usernameClass = `gds-asset-${shop.username_style}`;
@@ -70,6 +78,7 @@ export default class GamifiedShopUserCard extends Component {
         frame.classList.add("gds-avatar-frame", `gds-asset-${shop.avatar_frame}`);
         frame.setAttribute("aria-hidden", "true");
         mount.appendChild(frame);
+        sizeAvatarFrame(frame, avatarImage);
         cleanups.push(() => frame.remove());
       }
     }

@@ -39,11 +39,15 @@ after_initialize do
 
   # --- Serializer data (PRD 12) ---
   # Post stream: equipped asset ids only; CSS classes drive the rendering.
+  # The include_condition must NOT reference `object` (an object-referencing
+  # condition here evaluates false/absent on the post stream, unlike the
+  # object-free :user/:user_card conditions below); guard the user_id in the
+  # value block instead.
   add_to_serializer(
     :post,
     :gamified_shop,
-    include_condition: -> { SiteSetting.gamified_shop_enabled && object.user_id.present? },
-  ) { GamifiedShop::EquippedCache.for_user(object.user_id) }
+    include_condition: -> { SiteSetting.gamified_shop_enabled },
+  ) { object.user_id ? GamifiedShop::EquippedCache.for_user(object.user_id) : {} }
 
   # User card and full profile: equipped asset ids + public balance.
   add_to_serializer(

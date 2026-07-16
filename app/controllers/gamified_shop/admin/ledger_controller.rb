@@ -6,7 +6,7 @@ module GamifiedShop
       PAGE_SIZE = 50
 
       def index
-        entries = PointLedgerEntry.order(id: :desc)
+        entries = PointLedgerEntry.includes(:user).order(id: :desc)
 
         if params[:username].present?
           user = User.find_by_username(params[:username])
