@@ -218,6 +218,44 @@ RSpec.describe GamifiedShop::Admin::UsersController do
         expect(decoration["decoration_asset_id"]).to eq(asset.id)
         expect(decoration["source"]).to eq("admin_grant")
         expect(decoration["equipped"]).to eq(false)
+        expect(decoration["expires_at"]).to be_nil
+      end
+
+      it "grants with a duration preset (issue #5)" do
+        post "#{base_path}/decorations.json",
+             params: {
+               decoration_asset_id: asset.id,
+               duration_days: 30,
+             }
+
+        expect(response.status).to eq(200)
+        expect(GamifiedShop::UserDecoration.last.expires_at).to be_within(1.minute).of(
+          30.days.from_now,
+        )
+      end
+
+      it "grants with an absolute expiry date (issue #5)" do
+        post "#{base_path}/decorations.json",
+             params: {
+               decoration_asset_id: asset.id,
+               expires_at: 10.days.from_now.to_date.to_s,
+             }
+
+        expect(response.status).to eq(200)
+        expect(GamifiedShop::UserDecoration.last.expires_at).to be_present
+      end
+
+      it "returns 422 for an expiry in the past (issue #5)" do
+        post "#{base_path}/decorations.json",
+             params: {
+               decoration_asset_id: asset.id,
+               expires_at: 2.days.ago.to_date.to_s,
+             }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("gamified_shop.errors.invalid_expiry"),
+        )
       end
 
       it "returns 422 for an unknown asset" do

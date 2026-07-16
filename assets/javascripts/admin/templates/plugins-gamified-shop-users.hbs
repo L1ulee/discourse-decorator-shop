@@ -58,6 +58,22 @@
                 @value={{this.grantAssetId}}
                 @onChange={{this.updateGrantAssetId}}
               />
+            </div>
+            <div class="gamified-shop-admin-form__row">
+              <label>{{i18n "gamified_shop.admin.users.grant_duration"}}</label>
+              <ComboBox
+                @content={{this.grantDurationOptions}}
+                @value={{this.grantDurationOption}}
+                @onChange={{this.updateGrantDuration}}
+              />
+              {{#if this.grantIsCustom}}
+                <label>
+                  {{i18n "gamified_shop.admin.users.grant_expires_at"}}
+                </label>
+                <Input @type="date" @value={{this.grantExpiresAt}} />
+              {{/if}}
+            </div>
+            <div class="gamified-shop-admin-form__actions">
               <DButton
                 class="btn-primary"
                 @label="gamified_shop.admin.users.grant_decoration"

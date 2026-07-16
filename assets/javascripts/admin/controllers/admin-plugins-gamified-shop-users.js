@@ -28,6 +28,8 @@ export default class AdminPluginsGamifiedShopUsersController extends Controller 
   @tracked adjusting = false;
 
   @tracked grantAssetId = null;
+  @tracked grantDurationOption = "permanent";
+  @tracked grantExpiresAt = "";
   @tracked granting = false;
 
   get canGrant() {
@@ -54,6 +56,41 @@ export default class AdminPluginsGamifiedShopUsersController extends Controller 
       id: asset.id,
       name: `${asset.name} (${i18n(`gamified_shop.slots.${asset.slot}`)})`,
     }));
+  }
+
+  get grantDurationOptions() {
+    return [
+      {
+        id: "permanent",
+        name: i18n("gamified_shop.admin.users.grant_duration_permanent"),
+      },
+      {
+        id: "7",
+        name: i18n("gamified_shop.admin.users.grant_duration_days", {
+          count: 7,
+        }),
+      },
+      {
+        id: "30",
+        name: i18n("gamified_shop.admin.users.grant_duration_days", {
+          count: 30,
+        }),
+      },
+      {
+        id: "90",
+        name: i18n("gamified_shop.admin.users.grant_duration_days", {
+          count: 90,
+        }),
+      },
+      {
+        id: "custom",
+        name: i18n("gamified_shop.admin.users.grant_duration_custom"),
+      },
+    ];
+  }
+
+  get grantIsCustom() {
+    return this.grantDurationOption === "custom";
   }
 
   get decorationRows() {
@@ -98,6 +135,8 @@ export default class AdminPluginsGamifiedShopUsersController extends Controller 
       this.adjustAmount = null;
       this.adjustDescription = "";
       this.grantAssetId = null;
+      this.grantDurationOption = "permanent";
+      this.grantExpiresAt = "";
     } catch (error) {
       popupAjaxError(error);
     } finally {
@@ -108,6 +147,11 @@ export default class AdminPluginsGamifiedShopUsersController extends Controller 
   @action
   updateGrantAssetId(assetId) {
     this.grantAssetId = assetId;
+  }
+
+  @action
+  updateGrantDuration(option) {
+    this.grantDurationOption = option;
   }
 
   @action
@@ -145,17 +189,28 @@ export default class AdminPluginsGamifiedShopUsersController extends Controller 
       return;
     }
 
+    const data = { decoration_asset_id: this.grantAssetId };
+    if (this.grantDurationOption === "custom") {
+      if (this.grantExpiresAt) {
+        data.expires_at = this.grantExpiresAt;
+      }
+    } else if (this.grantDurationOption !== "permanent") {
+      data.duration_days = this.grantDurationOption;
+    }
+
     this.granting = true;
     try {
       const result = await ajax(
         `${BASE_URL}/users/${this.shopUser.id}/decorations.json`,
         {
           type: "POST",
-          data: { decoration_asset_id: this.grantAssetId },
+          data,
         }
       );
       this.decorations = [result.decoration, ...this.decorations];
       this.grantAssetId = null;
+      this.grantDurationOption = "permanent";
+      this.grantExpiresAt = "";
     } catch (error) {
       popupAjaxError(error);
     } finally {

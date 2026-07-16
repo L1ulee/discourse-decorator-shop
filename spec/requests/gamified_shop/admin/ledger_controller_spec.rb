@@ -54,6 +54,9 @@ RSpec.describe GamifiedShop::Admin::LedgerController do
       expect(entries.map { |e| e["id"] }).to eq([grant.id, reward.id])
       expect(entries.last["amount"]).to eq(10)
       expect(entries.last["balance_after"]).to eq(10)
+      # Serializes the username, not the raw uid (issue #4).
+      expect(entries.first["username"]).to eq(bob.username)
+      expect(entries.last["username"]).to eq(alice.username)
     end
 
     it "filters by entry_type" do

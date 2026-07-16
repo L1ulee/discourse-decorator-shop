@@ -21,6 +21,7 @@ zh_CN:
       asset_in_use: "该资源已绑定商品或已被用户拥有，不能删除。请改为下架相关商品。"
       decoration_not_found: "该装饰不存在。"
       decoration_expired: "该装饰已过期，无法启用。"
+      invalid_expiry: "到期时间无效或已过去。"
     css_errors:
       too_long: "自定义 CSS 超过 4KB 上限"
       forbidden_characters: "自定义 CSS 不允许包含大括号、@ 规则、反斜杠或尖括号"

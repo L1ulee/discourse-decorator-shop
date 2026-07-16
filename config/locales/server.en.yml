@@ -21,6 +21,7 @@ en:
       asset_in_use: "This asset is bound to a shop item or owned by users and cannot be deleted. Unlist the item instead."
       decoration_not_found: "That decoration does not exist."
       decoration_expired: "This decoration has expired and cannot be equipped."
+      invalid_expiry: "The expiry date is invalid or in the past."
     css_errors:
       too_long: "custom CSS exceeds the 4KB limit"
       forbidden_characters: "custom CSS may not contain braces, at-rules (@), backslashes or angle brackets"
