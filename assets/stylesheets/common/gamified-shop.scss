@@ -5,13 +5,14 @@
 // them. All selectors are namespaced with gds- (PRD 18.4).
 
 // --- Avatar frame: post stream ---
-// The compiled stylesheet sets --gds-frame-image on `article.gds-af-<id>
-// .topic-avatar`; the overlay renders as a pseudo-element around the avatar.
-article[class*="gds-af-"] .topic-avatar .post-avatar {
+// addPostClassesCallback tags the post wrapper `div.topic-post` (not the inner
+// <article>) with `gds-af-<id>`; the compiled stylesheet sets --gds-frame-image
+// on `.gds-af-<id> .topic-avatar`, and the overlay renders as a pseudo-element.
+[class*="gds-af-"] .topic-avatar .post-avatar {
   position: relative;
 }
 
-article[class*="gds-af-"] .topic-avatar .post-avatar::after {
+[class*="gds-af-"] .topic-avatar .post-avatar::after {
   content: "";
   position: absolute;
   top: -10%;
@@ -74,7 +75,7 @@ article[class*="gds-af-"] .topic-avatar .post-avatar::after {
 @media (prefers-reduced-motion: reduce) {
   [class*="gds-asset-"],
   [class*="gds-asset-"] *,
-  article[class*="gds-un-"] .names .first a,
+  [class*="gds-un-"] .names .first a,
   .gds-avatar-frame {
     animation: none !important;
     transition: none !important;

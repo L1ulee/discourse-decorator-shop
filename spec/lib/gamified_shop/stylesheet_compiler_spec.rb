@@ -12,7 +12,7 @@ RSpec.describe GamifiedShop::StylesheetCompiler do
       css = described_class.compile
 
       expect(css).to include(
-        ".gds-asset-#{asset.id}, article.gds-un-#{asset.id} .names .first a" \
+        ".gds-asset-#{asset.id}, .gds-un-#{asset.id} .names .first a" \
           " { color: #ff0000 !important; }",
       )
     end
@@ -23,7 +23,7 @@ RSpec.describe GamifiedShop::StylesheetCompiler do
       css = described_class.compile
 
       expect(css).to include(
-        ".gds-asset-#{asset.id}, article.gds-un-#{asset.id} .names .first a" \
+        ".gds-asset-#{asset.id}, .gds-un-#{asset.id} .names .first a" \
           " { color: #ff0000 !important; letter-spacing: 1px; }",
       )
     end
@@ -41,7 +41,7 @@ RSpec.describe GamifiedShop::StylesheetCompiler do
       css = described_class.compile
 
       expect(css).to include(
-        ".gds-asset-#{asset.id}, article.gds-un-#{asset.id} .names .first a" \
+        ".gds-asset-#{asset.id}, .gds-un-#{asset.id} .names .first a" \
           " { letter-spacing: 2px; }",
       )
     end
@@ -53,7 +53,7 @@ RSpec.describe GamifiedShop::StylesheetCompiler do
       css = described_class.compile
 
       expect(css).to include(
-        ".gds-asset-#{asset.id}, article.gds-af-#{asset.id} .topic-avatar" \
+        ".gds-asset-#{asset.id}, .gds-af-#{asset.id} .topic-avatar" \
           " { --gds-frame-image: url('#{asset.image_url}'); }",
       )
       expect(css).not_to include("prefers-reduced-motion")
@@ -67,7 +67,7 @@ RSpec.describe GamifiedShop::StylesheetCompiler do
 
       expect(css).to include("@media (prefers-reduced-motion: reduce)")
       expect(css).to include(
-        ".gds-asset-#{asset.id}, article.gds-af-#{asset.id} .topic-avatar" \
+        ".gds-asset-#{asset.id}, .gds-af-#{asset.id} .topic-avatar" \
           " { --gds-frame-image: none; }",
       )
     end
@@ -125,7 +125,7 @@ RSpec.describe GamifiedShop::StylesheetCompiler do
       asset = Fabricate(:gamified_shop_decoration_asset)
       described_class.expire!
 
-      selector = ".gds-asset-#{asset.id}, article.gds-un-#{asset.id} .names .first a"
+      selector = ".gds-asset-#{asset.id}, .gds-un-#{asset.id} .names .first a"
       expect(described_class.css).to include(selector)
 
       # delete_all skips callbacks, so the cached stylesheet stays stale
