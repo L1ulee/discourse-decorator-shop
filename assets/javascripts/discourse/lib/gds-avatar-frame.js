@@ -3,35 +3,38 @@
 //
 // The frame span is appended to the avatar image's positioned parent, but that
 // parent is not the avatar's tight box: a user card mounts it in
-// <a.card-huge-avatar> and a profile/message mounts it in the wider
-// .user-profile-avatar container, so sizing the frame to the parent (the old
-// CSS 120% fallback) made it oversized and offset (issue #6).
+// <a.card-huge-avatar> and a profile mounts it in the wider
+// .user-profile-avatar container, so sizing the frame to the parent (the CSS
+// percentage fallback) made it oversized and offset (issue #6).
 //
-// getBoundingClientRect is used for accurate rendered geometry (offsetLeft/Top
-// misbehaves across borders and offsetParent quirks), and a ResizeObserver
-// re-runs the sizing once the avatar image actually lays out — animated/lazy
-// avatars often have no size at the moment the modifier runs.
-const OVERSCAN = 1.3;
+// Geometry is read from the image's *layout* box (offsetWidth/Height/Left/Top),
+// NOT getBoundingClientRect. A user card animates in with a CSS
+// `transform: scale()`; getBoundingClientRect reports the shrunk, mid-animation
+// rect, which left the frame tiny and stranded in the top-left corner (the
+// ResizeObserver could not rescue it — a transform does not change layout size,
+// so it never fires). offsetWidth/Height ignore ancestor transforms, giving the
+// avatar's true size, and the frame — being a child of the same transformed
+// mount — animates in together with it. offsetLeft/Top are measured against the
+// avatar's offsetParent, which the connectors force to be the mount
+// (position:relative) — the frame's offsetParent too, so both share one
+// coordinate system. Do NOT switch this back to getBoundingClientRect.
+//
+// A ResizeObserver re-runs the sizing once the avatar image actually lays out —
+// lazy avatars can still have no layout size when the modifier first runs.
+const OVERSCAN = 1.45;
 
 function applyFrameGeometry(frame, avatarImage) {
-  const mount = frame.offsetParent;
+  const width = avatarImage.offsetWidth;
+  const height = avatarImage.offsetHeight;
 
-  if (!mount) {
+  if (!width || !height) {
     return;
   }
 
-  const image = avatarImage.getBoundingClientRect();
-
-  if (!image.width || !image.height) {
-    return;
-  }
-
-  const parent = mount.getBoundingClientRect();
-
-  frame.style.left = `${image.left - parent.left + image.width / 2}px`;
-  frame.style.top = `${image.top - parent.top + image.height / 2}px`;
-  frame.style.width = `${image.width * OVERSCAN}px`;
-  frame.style.height = `${image.height * OVERSCAN}px`;
+  frame.style.left = `${avatarImage.offsetLeft + width / 2}px`;
+  frame.style.top = `${avatarImage.offsetTop + height / 2}px`;
+  frame.style.width = `${width * OVERSCAN}px`;
+  frame.style.height = `${height * OVERSCAN}px`;
   frame.style.transform = "translate(-50%, -50%)";
 }
 
