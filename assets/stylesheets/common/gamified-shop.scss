@@ -15,10 +15,10 @@
 [class*="gds-af-"] .topic-avatar .post-avatar::after {
   content: "";
   position: absolute;
-  top: -10%;
-  left: -10%;
-  width: 120%;
-  height: 120%;
+  top: -22.5%;
+  left: -22.5%;
+  width: 145%;
+  height: 145%;
   background: var(--gds-frame-image) center / contain no-repeat;
   pointer-events: none;
   z-index: 2;
@@ -29,10 +29,10 @@
 // stylesheet provides --gds-frame-image for that asset class.
 .gds-avatar-frame {
   position: absolute;
-  top: -10%;
-  left: -10%;
-  width: 120%;
-  height: 120%;
+  top: -22.5%;
+  left: -22.5%;
+  width: 145%;
+  height: 145%;
   background: var(--gds-frame-image) center / contain no-repeat;
   pointer-events: none;
   z-index: 2;
