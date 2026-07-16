@@ -53,7 +53,7 @@ export default class GamifiedShopProfile extends Component {
         frame.classList.add("gds-avatar-frame", `gds-asset-${shop.avatar_frame}`);
         frame.setAttribute("aria-hidden", "true");
         mount.appendChild(frame);
-        sizeAvatarFrame(frame, avatarImage);
+        cleanups.push(sizeAvatarFrame(frame, avatarImage));
         cleanups.push(() => frame.remove());
       }
     }
