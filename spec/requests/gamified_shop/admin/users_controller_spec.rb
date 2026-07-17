@@ -269,7 +269,7 @@ RSpec.describe GamifiedShop::Admin::UsersController do
     end
 
     describe "#revoke_decoration" do
-      it "expires the decoration immediately" do
+      it "removes the decoration from the user" do
         decoration =
           Fabricate(
             :gamified_shop_user_decoration,
@@ -281,11 +281,9 @@ RSpec.describe GamifiedShop::Admin::UsersController do
         delete "#{base_path}/decorations/#{decoration.id}.json"
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["decoration"]["displayable"]).to eq(false)
-
-        decoration.reload
-        expect(decoration.equipped).to eq(false)
-        expect(decoration.expired?).to eq(true)
+        expect(response.parsed_body["removed"]).to eq(true)
+        expect(response.parsed_body["id"]).to eq(decoration.id)
+        expect(GamifiedShop::UserDecoration.exists?(decoration.id)).to eq(false)
       end
 
       it "returns 422 for an unknown decoration" do

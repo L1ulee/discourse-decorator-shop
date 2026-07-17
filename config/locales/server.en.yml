@@ -18,7 +18,7 @@ en:
       order_not_refundable: "Only fulfilled orders can be refunded."
       invalid_amount: "The amount must be a non-zero integer."
       asset_not_found: "That decoration asset does not exist."
-      asset_in_use: "This asset is bound to a shop item or owned by users and cannot be deleted. Unlist the item instead."
+      asset_in_use: "The asset could not be deleted because it was being purchased or granted at the same moment. Please try again."
       decoration_not_found: "That decoration does not exist."
       decoration_expired: "This decoration has expired and cannot be equipped."
       invalid_expiry: "The expiry date is invalid or in the past."

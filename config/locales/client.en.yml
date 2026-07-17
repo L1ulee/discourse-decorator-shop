@@ -68,7 +68,7 @@ en:
           style_params: "Preset parameters"
           custom_css: "Custom CSS (admin only, declarations only)"
           delete: "Delete"
-          delete_confirm: "Delete this asset? Only unused assets can be deleted."
+          delete_confirm: "Delete this asset? It is removed from every user who owns it and unlisted from any shop item. This cannot be undone."
           in_use: "In use"
           preview: "Preview"
         users:
@@ -88,7 +88,7 @@ en:
           grant_duration_custom: "Custom date"
           grant_expires_at: "Expiry date"
           revoke: "Revoke"
-          revoke_confirm: "Revoke this decoration? It stops displaying immediately."
+          revoke_confirm: "Remove this decoration from the user? It is permanently deleted and cannot be undone."
           apply: "Apply"
         orders:
           item: "Item"
@@ -124,4 +124,5 @@ en:
             gamified_shop_create_item: "Shop: create item"
             gamified_shop_update_item: "Shop: update item"
             gamified_shop_create_asset: "Shop: create asset"
+            gamified_shop_update_asset: "Shop: update asset"
             gamified_shop_destroy_asset: "Shop: delete asset"

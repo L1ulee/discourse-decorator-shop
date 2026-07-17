@@ -224,14 +224,14 @@ export default class AdminPluginsGamifiedShopUsersController extends Controller 
       message: i18n("gamified_shop.admin.users.revoke_confirm"),
       didConfirm: async () => {
         try {
-          const result = await ajax(
+          await ajax(
             `${BASE_URL}/users/${this.shopUser.id}/decorations/${decoration.id}.json`,
             { type: "DELETE" }
           );
-          // The backend keeps the row (unequipped + expired); mirror that
-          // instead of dropping it, so the table matches a reload.
-          this.decorations = this.decorations.map((d) =>
-            d.id === decoration.id ? result.decoration : d
+          // Revoke removes the decoration entirely; drop it from the list to
+          // match a reload.
+          this.decorations = this.decorations.filter(
+            (d) => d.id !== decoration.id
           );
         } catch (error) {
           popupAjaxError(error);

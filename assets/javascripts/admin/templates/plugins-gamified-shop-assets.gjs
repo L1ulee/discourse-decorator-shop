@@ -130,11 +130,15 @@ export default RouteTemplate(
               <td>{{row.inUseLabel}}</td>
               <td>
                 <DButton
+                  @icon="pencil"
+                  @label="gamified_shop.admin.assets.edit"
+                  @action={{fn @controller.editAsset row.asset}}
+                />
+                <DButton
                   class="btn-danger"
                   @icon="trash-can"
                   @label="gamified_shop.admin.assets.delete"
                   @action={{fn @controller.deleteAsset row.asset}}
-                  @disabled={{row.deleteDisabled}}
                 />
               </td>
             </tr>

@@ -105,6 +105,7 @@ after_initialize do
       constraints(StaffConstraint.new) do
         get "/assets" => "gamified_shop/admin/assets#index"
         post "/assets" => "gamified_shop/admin/assets#create"
+        put "/assets/:id" => "gamified_shop/admin/assets#update"
         delete "/assets/:id" => "gamified_shop/admin/assets#destroy"
 
         get "/users" => "gamified_shop/admin/users#index"
