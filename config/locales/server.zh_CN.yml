@@ -18,7 +18,7 @@ zh_CN:
       order_not_refundable: "只有已完成的订单可以退款。"
       invalid_amount: "数量必须是非零整数。"
       asset_not_found: "装饰资源不存在。"
-      asset_in_use: "该资源已绑定商品或已被用户拥有，不能删除。请改为下架相关商品。"
+      asset_in_use: "删除失败：该资源正在被购买或发放。请稍后重试。"
       decoration_not_found: "该装饰不存在。"
       decoration_expired: "该装饰已过期，无法启用。"
       invalid_expiry: "到期时间无效或已过去。"

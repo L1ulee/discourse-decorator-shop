@@ -2,10 +2,10 @@
 
 module GamifiedShop
   class AdminDecorationAssetSerializer < DecorationAssetSerializer
-    attributes :upload_id, :style_params, :custom_css, :destroyable
+    attributes :upload_id, :style_params, :custom_css, :in_use
 
-    def destroyable
-      object.destroyable?
+    def in_use
+      object.in_use?
     end
   end
 end

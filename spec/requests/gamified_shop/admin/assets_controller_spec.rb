@@ -82,7 +82,7 @@ RSpec.describe GamifiedShop::Admin::AssetsController do
         expect(serialized["id"]).to eq(asset.id)
         expect(serialized["custom_css"]).to eq("letter-spacing: 1px;")
         expect(serialized["style_params"]).to eq("color" => "#ff0000")
-        expect(serialized["destroyable"]).to eq(true)
+        expect(serialized["in_use"]).to eq(false)
       end
     end
 
@@ -136,6 +136,54 @@ RSpec.describe GamifiedShop::Admin::AssetsController do
       end
     end
 
+    describe "#update" do
+      it "updates an asset's name" do
+        asset = Fabricate(:gamified_shop_decoration_asset)
+
+        # Mirrors the admin form, which resubmits the full style payload.
+        put "/admin/plugins/gamified-shop/assets/#{asset.id}.json",
+            params: {
+              name: "Renamed",
+              slot: "username_style",
+              style_preset: "username_solid",
+              style_params: {
+                color: "#ffd700",
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["asset"]["name"]).to eq("Renamed")
+        expect(asset.reload.name).to eq("Renamed")
+      end
+
+      it "switches a style asset to a different preset" do
+        asset = Fabricate(:gamified_shop_decoration_asset)
+
+        put "/admin/plugins/gamified-shop/assets/#{asset.id}.json",
+            params: {
+              name: asset.name,
+              slot: "username_style",
+              style_preset: "username_rainbow",
+            }
+
+        expect(response.status).to eq(200)
+        expect(asset.reload.style_preset).to eq("username_rainbow")
+      end
+
+      it "returns 422 for an unknown asset" do
+        put "/admin/plugins/gamified-shop/assets/0.json",
+            params: {
+              name: "X",
+              slot: "avatar_frame",
+            }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("gamified_shop.errors.asset_not_found"),
+        )
+      end
+    end
+
     describe "#destroy" do
       fab!(:asset, :gamified_shop_decoration_asset)
 
@@ -146,28 +194,30 @@ RSpec.describe GamifiedShop::Admin::AssetsController do
         expect(GamifiedShop::DecorationAsset.exists?(asset.id)).to eq(false)
       end
 
-      it "refuses with 422 when the asset is bound to a shop item" do
-        Fabricate(:gamified_shop_item, decoration_asset: asset)
+      it "deletes the asset and unlinks its shop item, preserving orders" do
+        item = Fabricate(:gamified_shop_item, decoration_asset: asset)
+        order = Fabricate(:gamified_shop_order, shop_item: item)
 
         delete "/admin/plugins/gamified-shop/assets/#{asset.id}.json"
 
-        expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"]).to include(
-          I18n.t("gamified_shop.errors.asset_in_use"),
-        )
-        expect(GamifiedShop::DecorationAsset.exists?(asset.id)).to eq(true)
+        expect(response.status).to eq(200)
+        expect(GamifiedShop::DecorationAsset.exists?(asset.id)).to eq(false)
+
+        item.reload
+        expect(item.decoration_asset_id).to be_nil
+        expect(item.listed).to eq(false)
+        # Order history is preserved (the item row stays, just unlinked).
+        expect(GamifiedShop::ShopOrder.exists?(order.id)).to eq(true)
       end
 
-      it "refuses with 422 when the asset is owned by a user" do
-        Fabricate(:gamified_shop_user_decoration, decoration_asset: asset)
+      it "deletes the asset and removes it from users who own it" do
+        decoration = Fabricate(:gamified_shop_user_decoration, decoration_asset: asset)
 
         delete "/admin/plugins/gamified-shop/assets/#{asset.id}.json"
 
-        expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"]).to include(
-          I18n.t("gamified_shop.errors.asset_in_use"),
-        )
-        expect(GamifiedShop::DecorationAsset.exists?(asset.id)).to eq(true)
+        expect(response.status).to eq(200)
+        expect(GamifiedShop::DecorationAsset.exists?(asset.id)).to eq(false)
+        expect(GamifiedShop::UserDecoration.exists?(decoration.id)).to eq(false)
       end
 
       it "returns 422 for an unknown asset" do

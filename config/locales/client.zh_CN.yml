@@ -68,7 +68,7 @@ zh_CN:
           style_params: "预设参数"
           custom_css: "自定义 CSS（仅管理员，只允许声明列表）"
           delete: "删除"
-          delete_confirm: "删除该资源？只有未被使用的资源可以删除。"
+          delete_confirm: "删除该资源？将从所有拥有它的用户身上移除，并下架相关商品。此操作不可撤销。"
           in_use: "使用中"
           preview: "预览"
         users:
@@ -88,7 +88,7 @@ zh_CN:
           grant_duration_custom: "自定义日期"
           grant_expires_at: "到期日期"
           revoke: "撤销"
-          revoke_confirm: "撤销该装饰？将立即停止展示。"
+          revoke_confirm: "从该用户移除此装饰？将永久删除且不可撤销。"
           apply: "执行"
         orders:
           item: "商品"
@@ -124,4 +124,5 @@ zh_CN:
             gamified_shop_create_item: "商城：创建商品"
             gamified_shop_update_item: "商城：更新商品"
             gamified_shop_create_asset: "商城：创建装饰资源"
+            gamified_shop_update_asset: "商城：编辑装饰资源"
             gamified_shop_destroy_asset: "商城：删除装饰资源"

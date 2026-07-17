@@ -120,7 +120,7 @@ RSpec.describe GamifiedShop::Grants do
   end
 
   describe ".revoke_decoration!" do
-    it "unequips the decoration and expires it immediately" do
+    it "permanently removes the decoration from the user" do
       decoration =
         Fabricate(
           :gamified_shop_user_decoration,
@@ -131,10 +131,7 @@ RSpec.describe GamifiedShop::Grants do
 
       described_class.revoke_decoration!(user_decoration_id: decoration.id, acting_user: admin)
 
-      decoration.reload
-      expect(decoration.equipped).to eq(false)
-      expect(decoration.expires_at).to be_within(5.seconds).of(Time.zone.now)
-      expect(decoration.displayable?).to eq(false)
+      expect(GamifiedShop::UserDecoration.exists?(decoration.id)).to eq(false)
     end
 
     it "rejects a nonexistent decoration with decoration_not_found" do

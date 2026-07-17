@@ -64,11 +64,10 @@ module GamifiedShop
         target = UserDecoration.find_by(id: params[:id], user_id: user.id)
         raise ShopError.new(:decoration_not_found) if target.blank?
 
-        decoration =
-          Grants.revoke_decoration!(user_decoration_id: target.id, acting_user: current_user)
-        render_json_dump(
-          decoration: serialize_data(decoration, UserDecorationSerializer, root: false),
-        )
+        # Revoke now removes the row entirely; return its id so the admin UI
+        # can drop it from the list.
+        Grants.revoke_decoration!(user_decoration_id: target.id, acting_user: current_user)
+        render_json_dump(removed: true, id: target.id)
       end
 
       private

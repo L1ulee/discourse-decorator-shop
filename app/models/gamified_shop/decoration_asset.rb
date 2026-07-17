@@ -35,11 +35,12 @@ module GamifiedShop
       upload&.animated? || false
     end
 
-    # An asset in circulation can never be physically deleted (PRD 6.4);
-    # the FK RESTRICT enforces it at the database level, this gives a
-    # friendly answer before hitting the constraint.
-    def destroyable?
-      !shop_items.exists? && !user_decorations.exists?
+    # True when a shop item sells the asset or a user owns it. Deletion is
+    # still allowed — AssetsController#destroy cascades the cleanup (removes
+    # it from users, unlinks shop items) — so this only drives the admin
+    # "in use" label and the delete-confirmation warning.
+    def in_use?
+      shop_items.exists? || user_decorations.exists?
     end
 
     private

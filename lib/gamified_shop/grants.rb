@@ -60,19 +60,29 @@ module GamifiedShop
       decoration
     end
 
-    # Revoke = expire now (PRD 6.5); who/when goes to the staff action log.
-    # Admin-only: the moderator setting covers issuance, not removal
-    # (PRD 5.2/5.3).
+    # Revoke = permanently remove the decoration from the user: the row is
+    # deleted so it disappears from the user and the admin list (chosen over
+    # the old "expire in place", which left the row looking un-revoked). The
+    # who/when/what audit still lands in the staff action log; destroy's
+    # after_commit invalidates the user's EquippedCache. Admin-only: the
+    # moderator setting covers issuance, not removal (PRD 5.2/5.3).
+    #
+    # (Order refunds deliberately keep their own inline "expire" instead of
+    # calling this — a refunded purchase stays on record.)
     def self.revoke_decoration!(user_decoration_id:, acting_user:)
       raise Discourse::InvalidAccess.new unless acting_user&.admin?
       decoration = UserDecoration.find_by(id: user_decoration_id)
       raise ShopError.new(:decoration_not_found) if decoration.blank?
 
-      decoration.update!(equipped: false, expires_at: Time.zone.now) unless decoration.expired?
+      # Capture identifiers before the row is destroyed (the log needs them).
+      user_id = decoration.user_id
+      asset_id = decoration.decoration_asset_id
+      decoration.destroy!
+
       StaffActionLogger.new(acting_user).log_custom(
         "gamified_shop_revoke_decoration",
-        target_user_id: decoration.user_id,
-        decoration_asset_id: decoration.decoration_asset_id,
+        target_user_id: user_id,
+        decoration_asset_id: asset_id,
       )
       decoration
     end
