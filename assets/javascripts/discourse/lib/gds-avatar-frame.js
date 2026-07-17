@@ -21,7 +21,7 @@
 //
 // A ResizeObserver re-runs the sizing once the avatar image actually lays out —
 // lazy avatars can still have no layout size when the modifier first runs.
-const OVERSCAN = 1.45;
+const OVERSCAN = 1.7;
 
 function applyFrameGeometry(frame, avatarImage) {
   const width = avatarImage.offsetWidth;

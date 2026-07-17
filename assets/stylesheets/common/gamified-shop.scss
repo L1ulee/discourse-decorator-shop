@@ -12,11 +12,18 @@
 // The overlay is anchored on `.main-avatar` — the <a> (from core's
 // post/avatar.gjs → DUserAvatar → DUserLink) that tightly wraps ONLY the
 // <img.avatar>. It is deliberately NOT `.post-avatar`: that box also contains
-// the group-flair badge and a `.post-avatar-user-info` div, so sizing a 145%
+// the group-flair badge and a `.post-avatar-user-info` div, so sizing the
 // overlay to it left the frame oversized and offset from the avatar (the
 // reported mismatch). `.main-avatar` == the image box, so the frame lands on
 // the avatar exactly. `inline-flex` drops the inline baseline gap so the box
 // is the image's height precisely (an <img> cannot take an ::after itself).
+//
+// 170% (must match OVERSCAN in gds-avatar-frame.js, used by card/profile).
+// Frame PNGs carry generous transparent padding around the artwork (measured
+// ~26% on the sample set), and `background: contain` shrinks a non-square
+// image further, so the *visible* frame is much smaller than the box; 170%
+// makes it read as a real frame. Verified in-browser against langroad.com
+// across post stream / user card / profile — keeps the username readable.
 [class*="gds-af-"] .topic-avatar .main-avatar {
   position: relative;
   display: inline-flex;
@@ -25,10 +32,10 @@
 [class*="gds-af-"] .topic-avatar .main-avatar::after {
   content: "";
   position: absolute;
-  top: -22.5%;
-  left: -22.5%;
-  width: 145%;
-  height: 145%;
+  top: -35%;
+  left: -35%;
+  width: 170%;
+  height: 170%;
   background: var(--gds-frame-image) center / contain no-repeat;
   pointer-events: none;
   z-index: 2;
@@ -39,10 +46,10 @@
 // stylesheet provides --gds-frame-image for that asset class.
 .gds-avatar-frame {
   position: absolute;
-  top: -22.5%;
-  left: -22.5%;
-  width: 145%;
-  height: 145%;
+  top: -35%;
+  left: -35%;
+  width: 170%;
+  height: 170%;
   background: var(--gds-frame-image) center / contain no-repeat;
   pointer-events: none;
   z-index: 2;
